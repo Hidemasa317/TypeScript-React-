@@ -166,3 +166,14 @@ console.warn(); //注意警告で出力される。
 
 
 
+/////////////////. 2/5日（木）  ////////////////////
+// 型注釈とは
+
+const message : string = 'Hello World !';
+function add (x: number , y: number): number {
+  return x + y;
+} 
+
+
+
+
