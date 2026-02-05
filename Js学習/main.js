@@ -32,7 +32,7 @@ string = `string ${userName}`; //Jsを埋め込むことができる。
 string = "'``"; //実際の文字列の中にクオートを入れたい場合は、入れたいクオート以外のクオートで囲うことで可能。
 
 string = ' \!`'; //というように、珍しい文字列を入れたい場合は、バックスラッシュをその文字列の前に入れる。
-// バッククオートのみ様々な機能がある。　シングルクオーとの方が良いであろう。
+// バッククオートのみ様々な機能がある。シングルクオートの方が良いであろう。
 
 const userInput = '10'; //文字列の10。
 
@@ -68,7 +68,7 @@ const coffee = {
   toppings: ['Cinnamon', 'Caramel'],
   nutritions: {
     calaries: 430,
-    sugars: 53, //optionn⬆️で順番を移動おできる。
+    sugars: 53, //optionボタンと、⬆️で順番を移動できる。
   },
 };
 console.log(coffee.size); //オブジェクトのプロパティを取得する方法。オブジェクト内の、sizeプロパティを取得。
@@ -127,3 +127,42 @@ document.addEventListener('DOMContentLoaded', () => {
     title.textContent = '文字が変更されました！';
   });
 });
+
+///////////02/04//////////////
+
+////////グローバル変数///
+
+const newValue = 'kibá';
+
+function add(num1, num2) {
+  const value = num1 + num2;
+  console.log(newValue); //この様に、関数の中から関数の外で定義された定数を呼び出すことはできる。⭕️
+  //この時のnewValueはグローバル変数である。
+
+  return value;
+}
+
+console.log(value); //しかし、このように関数の中で定義された定数を呼び出すことはできない。❌
+//このvalueはローカル変数
+
+const value = 'kibá';
+function add(num1, num2) {
+  const value = um1 + num2;
+  console.log(newValue); //この様に、関数の中から関数の外で定義された定数を呼び出すことはできる。⭕️
+  //この時のnewValueはグローバル変数である。
+  return v;
+  lue;
+}
+//このよう
+// 、グローバルとローカル変数の定数名が同じであった場合、『ローカル変数』の方が優先される。
+
+/// cmd+F Find. cmd+/ で、コメント化。option + shift + ⬇️ で下に複製。
+/// cmd+D で、同じ単語を複数一括選択
+
+console.error(); //エラーマークで出力される。
+console.warn(); //注意警告で出力される。
+
+// MDN ~~ で検索をかける/////////////
+
+
+
