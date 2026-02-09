@@ -35,8 +35,6 @@ function render() {
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = '削除'; //ボタンに削除の文字を追加。
     deleteBtn.addEventListener('click', () => {
-      //⭕️ここから
-
       todos.splice(todos.indexOf(tempitem), 1); //ボタンが押されたら、該当のtodoを削除。
       render(); //リストを再描画。
 
@@ -44,13 +42,20 @@ function render() {
       // deleteBtn.remove(); //ボタン自身も削除。
     });
 
+    // 編集ボタン
+    const editBtn = document.createElement('button');
+    editBtn.textContent = '編集';
+    editBtn.addEventListener('click', () => {
+      render();
+    });
+
     listvalue.appendChild(li); //③listの要素に、liを追加していく。
     listvalue.appendChild(deleteBtn); //リストに削除ボタンを追加。
-
-    // window.alert(' Success ! ✅ リストが追加されました。');
+    listvalue.appendChild(editBtn);
   }
 }
 
+// Submitボタン機能
 submitvalue.addEventListener('click', () => {
   const item = {};
   item.todo = todovalue.value; //入力値取得、idで拾ってきた内容を入れ込んで概念を作成。
