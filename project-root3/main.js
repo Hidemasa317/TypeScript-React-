@@ -1,17 +1,3 @@
-// const todovalue = document.getElementById('todo'); //id取得
-// const datevalue = document.getElementById('date'); //id取得
-// const submitvalue = document.getElementById('submit'); //id取得
-
-// submitvalue.addEventListener('click', () => {
-//   //①クリックによって情報取得を登録 『定数に対し、イベントを追加している。』
-//   //Todo登録ボタン
-//   const item = {}; //格納オブジェクト
-//   item.todo = todovalue.value; //②todoへの入力値を取得。箱の中に仕切りを作り、その一行・レコードに値を入れているイメージ。
-//   item.date = datevalue.value; //③dateからの入力値を取得。同様。保存先＝取得元
-// });
-
-// //
-
 const todovalue = document.getElementById('todo');
 const datevalue = document.getElementById('date');
 const submitvalue = document.getElementById('submit');
@@ -27,31 +13,49 @@ function render() {
   for (const tempitem of todos) {
     //初めてここでtempitemが定義されている。
     //繰り返しtempitemが払い出される。🎵
-    //
     const li = document.createElement('li'); //①liというhtmlからの概念を作成。
-    li.textContent = `${tempitem.todo}（${tempitem.date}`; //②概念に、txtデータのtodoとdateの入力値（文字列）中身を埋め込む。
+    li.textContent = `${tempitem.todo}（${tempitem.date}）`; //②概念に、txtデータのtodoとdateの入力値（文字列）中身を埋め込む。
 
     //削除ボタン
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = '削除'; //ボタンに削除の文字を追加。
     deleteBtn.addEventListener('click', () => {
-      todos.splice(todos.indexOf(tempitem), 1); //ボタンが押されたら、該当のtodoを削除。
+      todos.splice(todos.indexOf(tempitem), 1); //(開始index, 削除数)
       render(); //リストを再描画。
-
-      // li.remove(); //ボタンが押されたら、li要素を削除。
-      // deleteBtn.remove(); //ボタン自身も削除。
     });
 
-    // 編集ボタン
-    const editBtn = document.createElement('button');
-    editBtn.textContent = '編集';
-    editBtn.addEventListener('click', () => {
-      render();
+    // todo編集ボタン
+    const editTodoBtn = document.createElement('button');
+    editTodoBtn.textContent = 'Todoの編集を行う';
+    editTodoBtn.addEventListener('click', () => {
+      const newTodo = prompt('Todoを編集', tempitem.todo);
+      if (newTodo !== null) {
+        todos.splice(todos.indexOf(tempitem.todo), 1, {
+          todo: newTodo,
+          date: tempitem.date,
+        });
+        render();
+      }
     });
 
-    listvalue.appendChild(li); //③listの要素に、liを追加していく。
+    // 期日編集ボタン
+    const editDateBtn = document.createElement('button');
+    editDateBtn.textContent = '期日の編集を行う';
+    editDateBtn.addEventListener('click', () => {
+      const newdate = prompt('期日を編集', tempitem.date);
+      if (newdate !== null) {
+        todos.splice(todos.indexOf(tempitem.date), 1, {
+          date: newdate,
+          todo: tempitem.todo,
+        });
+        render();
+      }
+    });
+
+    listvalue.appendChild(li); //listの要素に、liを追加していく。
+    listvalue.appendChild(editTodoBtn); //リストにTodo編集ボタンを追加。
+    listvalue.appendChild(editDateBtn); //リストに期日編集ボタンを追加。
     listvalue.appendChild(deleteBtn); //リストに削除ボタンを追加。
-    listvalue.appendChild(editBtn);
   }
 }
 
