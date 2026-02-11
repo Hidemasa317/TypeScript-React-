@@ -57,64 +57,33 @@ export default function Todo() {
   // ⚫️ return (); ⚫️ <div style{{margin:0 auto , padding :0;}}></div>と書く。
 
   return (
-    // <>
-    <div style={{ maxWidth: 600, margin: '0 auto', padding: 16 }}>
-      <h1>Todoリスト</h1>
+    <>
       <div
         style={{
+          maxWidth: 600,
+          margin: '0 auto',
+          padding: 16,
+          border: 5,
           display: 'flex',
           gap: 8,
           flexWrap: 'wrap',
           allignitems: 'center',
         }}
       >
-        {/* <h1> Todo Maker </h1> */}
-        <label>
-          Todo :{' '}
-          <input
-            value={text}
-            onChange={(e) => updateText(e.target.value)}
-            placeholder="例：買い物"
-          />
-        </label>
+        <h1> Todo Maker </h1>
 
-        <label>
-          期日 :{' '}
-          <input
-            value={date}
-            type="date"
-            onChange={(e = updateDate(e.target.value))}
-          />
-        </label>
-        <button onClick={addTodo}>Todoを追加する</button>
+        <div>
+          <label>
+            Todo :
+            <input value={text} />
+          </label>
+          <label>
+            期日 :
+            <input value={date} type="date" />
+          </label>
+          <button onClick={addTodo}>Todoを追加する</button>
+        </div>
       </div>
-
-      <ul
-        style={{
-          marginTop: 16,
-          border: '1px solid black',
-          padding: 8,
-          listStyle: 'none',
-          borderRadius: 4,
-        }}
-      >
-        {todos.map((t) => (
-          <li>
-            <span>
-              {t.text}（{t.date}）
-            </span>
-
-            <span style={{ display: 'flex', gap: 8 }}>
-              <button onClick={() => editTodoText(t.id, t.text)}>
-                Todo編集
-              </button>{' '}
-              {/** Todo編集ボタン*/}
-              <button onClick={() => deleteTodo(t.id)}>削除</button>
-              {/** 削除ボタン */}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </div>
+    </>
   );
 }
