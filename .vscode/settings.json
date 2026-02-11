@@ -11,5 +11,6 @@
   },
   "javascript.validate.enable": true,
   "javascript.format.enable": true,
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "liveServer.settings.port": 5501
 }

@@ -9,9 +9,9 @@ export default function Todo() {
   //🔹①関数内で必要なパーツとして定数を定義し、機能を代入。
   //🔹②JSX内の各部位内で定数要素を呼び出して、機能として具現化する。
 
-  const [todos, updateTodos] = useState(0); //配列と更新値を取得。
-  const [text, updateText] = useState(0); //テキスト(todoへの入力値)と、更新値を取得。
-  const [date, updateDate] = useState(0); //dateと更新値を取得。
+  const [todos, updateTodos] = useState([]); //配列と更新値を取得。
+  const [text, updateText] = useState(''); //テキスト(todoへの入力値)と、更新値を取得。
+  const [date, updateDate] = useState(''); //dateと更新値を取得。
 
   //------ = () =>. イコール、カッコ、イコール＞ --------------//
 
@@ -23,7 +23,7 @@ export default function Todo() {
     if (!date) return alert('期日を入力してください'); //アラート
 
     const newTodo = {
-      id: crypto.rundomUUID(), //簡易的なものでも良いが、ランダムにidを吐くこちらの方法で一応試行する。
+      id: crypto.randomUUID(), //簡易的なものでも良いが、ランダムにidを吐くこちらの方法で一応試行する。
       //後々DBなどから拾う際に役立つかも。
       text, //'あいうえお'等々
       date, //日付
@@ -74,10 +74,21 @@ export default function Todo() {
 
         <div>
           <label>
-            Todo : <input value={text} placeholder="例：買い物" />
+            Todo :
+            <input
+              value={text}
+              onChange={(e) => updateText(e.target.value)}
+              placeholder="例：会議"
+            />
           </label>
+
           <label>
-            期日 : <input value={date} type="date" />
+            期日 :
+            <input
+              value={date}
+              type="date"
+              onChange={(e) => updateDate(e.target.value)}
+            />
           </label>
           <button onClick={addTodo}>Todoを追加する</button>
         </div>
