@@ -1,11 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Time() {
   const [time, setTime] = useState<string>('');
 
-  const showTime = () => {
-    setTime(new Date().toLocaleTimeString());
-  };
+  //useEffect部🤖
+  // useEffect(() => {実行したい処理}, []);   ⚫️[]で、最初の一回のみ、という意味になる。
+
+  useEffect(() => {
+    const interval: number = setInterval(() => {
+      setTime(new Date().toLocaleTimeString());
+    }, 1000);
+  }, []);
+
+  //[]で、最初の一回のみ。
+  //🟤setInterval🟤は元からあるWeb API
+  // 🟤setinterval (実行したい処理、ミリ秒);
+
+  //showTime部も必要ないかも。統合できる。
+  // const showTime = () => {
+  //   setTime(new Date().toLocaleTimeString());
+  // };
 
   return (
     <>
@@ -35,14 +49,13 @@ export default function Time() {
           <br />
           <h2>現在の時刻: {time}</h2>
           <br />
-
-          <button
+          {/* <button
             style={{ gap: 6, height: 100, color: 'green' }}
             onClick={showTime}
           >
             {' '}
             現在時刻に更新する。{' '}
-          </button>
+          </button> */}
         </li>
       </div>
     </>
