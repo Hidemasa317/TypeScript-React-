@@ -7,9 +7,11 @@ export default function Time() {
   // useEffect(() => {実行したい処理}, []);   ⚫️[]で、最初の一回のみ、という意味になる。
 
   useEffect(() => {
-    const interval: number = setInterval(() => {
+    // const interval: number =
+
+    setInterval(() => {
       setTime(new Date().toLocaleTimeString());
-    }, 1000);
+    }, 1000); //1秒は1000ミリ秒
   }, []);
 
   //[]で、最初の一回のみ。
