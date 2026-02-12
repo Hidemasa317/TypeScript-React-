@@ -1,20 +1,50 @@
 import { useState } from 'react';
 
 export default function Time() {
-  const [time, printTime] = useState(0);
+  const [time, setTime] = useState<string>('');
 
   const showTime = () => {
-    printTime(Date.now());
+    setTime(new Date().toLocaleTimeString());
   };
 
   return (
     <>
-      <h1> NOW TIME BOARD </h1>
-      <p> 現在の時刻 : {time} </p>
+      <div
+        style={{
+          maxWidth: 600,
+          margin: '0 auto',
+          padding: 16,
+          border: 5,
+          display: 'flex',
+          gap: 8,
+          flexWrap: 'wrap',
+        }}
+      >
+        <li
+          style={{
+            display: 'flex',
+            gap: 8,
+            alignItems: 'center',
+            justifyContent: 'space-between',
 
-      <button onClick={showTime}> 現在時刻を表示する。 </button>
+            padding: '50px',
+            border: '1px solid #aaf51e',
+          }}
+        >
+          <h1> NOW TIME BOARD </h1>
+          <br />
+          <h2>現在の時刻: {time}</h2>
+          <br />
 
-      {/* <button onClick={printTime}> 現在時刻を表示する。 </button> */}
+          <button
+            style={{ gap: 6, height: 100, color: 'green' }}
+            onClick={showTime}
+          >
+            {' '}
+            現在時刻に更新する。{' '}
+          </button>
+        </li>
+      </div>
     </>
   );
 }

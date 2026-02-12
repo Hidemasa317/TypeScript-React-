@@ -9,24 +9,3 @@ root.render(
     <Time />
   </StrictMode>,
 );
-// import React from 'react';
-// import ReactDOM from 'react-dom/client';
-// import Time from './Time.jsx';
-
-// ReactDOM.createRoot(document.getElementById('root')).render(<Time />);
-// import React from 'react';
-// import ReactDOM from 'react-dom/client';
-// import Time from './Time';
-
-// ReactDOM.createRoot(document.getElementById('root')!).render(
-//   <React.StrictMode>
-//     <Time />
-//   </React.StrictMode>,
-// );
-
-// import ReactDOM from 'react-dom/client';
-// import Time from './Time';
-
-// ReactDOM.createRoot(document.getElementById('root')!).render(
-//   <Time />
-// );
