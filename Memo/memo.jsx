@@ -15,7 +15,7 @@ export default function Todo() {
     if (!date) return alert('期日を入力してください'); //期日が無いときの表示
 
     const newTodo = {
-      id: crypto.randomUUID(),//
+      id: crypto.randomUUID(), //
       text,
       date,
     };

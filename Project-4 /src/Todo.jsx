@@ -45,16 +45,21 @@ export default function Todo() {
     updateTodos(todos.filter((t) => t.id !== id));
   };
 
-  // const editTodoText = (id, currentText) => {
-  //   const newText = prompt('Todoを編集', currentText);
-  //   if (newText === null) return;
+  const editTodoText = (id, currentText) => {
+    const newText = prompt('Todoを編集', currentText); //入力欄にTodoを表示し、
+    if (newText === null) return; //入力されなかったら、更新しない。
 
-  //   updateTodos(todos.map((t) => (t.id === id ? { ...t, text: newText } : t)));
-  // };
+    updateTodos(todos.map((t) => (t.id === id ? { ...t, text: newText } : t)));
+    //🟢map で、()内の要素を見て、新しい配列を返す。
+    //id一致時　＝＝＝　の時、三項演算子が発動する。 一致の時、id 左（新しいtxtに置き換え。、否（false）の時、右（t)（変更しない）を返す。
+  }; //⚫️t は、この時点で『定義』している。
+
+  //🟤アロー関数、　const arrow (⚠️受け取る値⚠️) 　=> {}
 
   //-------------JSX ⬇️ -----------------//
 
   // ⚫️ return (); ⚫️ <div style{{margin:0 auto , padding :0;}}></div>と書く。
+  // ⚫️ JSX内に書ける、3要素。①HTML属性②style（CSS）③イベント属性（React特有）
 
   return (
     <>
@@ -78,6 +83,8 @@ export default function Todo() {
             <input
               value={text}
               onChange={(e) => updateText(e.target.value)}
+              // 🔹イベントハンドラ属性　onChange{}の形である。
+              // 🔹(e)(イベント属性)=>(アロー関数)updatetext(e.target.value(今変更された文字列))
               placeholder="例：会議"
             />
           </label>
@@ -92,6 +99,34 @@ export default function Todo() {
           </label>
           <button onClick={addTodo}>Todoを追加する</button>
         </div>
+
+        <ul>
+          {todos.map((t) => (
+            <li
+              key={t.id}
+              style={{
+                marginTop: 16,
+                border: '1px solid black',
+                padding: 8,
+                listStyle: 'none', //リストの・を枠の内側に。
+                borderRadius: 4,
+              }}
+            >
+              <span>
+                {t.text}（{t.date}）
+              </span>
+
+              <span style={{ display: 'flex', gap: 8 }}>
+                <button onClick={() => editTodoText(t.id, t.text)}>
+                  Todo編集
+                </button>{' '}
+                {/** Todo編集ボタン*/}
+                <button onClick={() => deleteTodo(t.id)}>削除</button>
+                {/** 削除ボタン */}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     </>
   );
