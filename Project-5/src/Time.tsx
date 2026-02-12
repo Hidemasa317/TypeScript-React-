@@ -12,7 +12,7 @@ export default function Time() {
       <h1> NOW TIME BOARD </h1>
       <p> 現在の時刻 : {time} </p>
 
-      <button onClick={showTime}></button>
+      <button onClick={showTime}> 現在時刻を表示する。 </button>
 
       {/* <button onClick={printTime}> 現在時刻を表示する。 </button> */}
     </>
