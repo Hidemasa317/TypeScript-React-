@@ -64,7 +64,7 @@
 //   );
 // }
 
-import Todo from "./Todo";
+import Todo from './Todo';
 
 export default function Home() {
   return <Todo />;

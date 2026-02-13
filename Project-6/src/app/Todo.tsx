@@ -55,6 +55,7 @@ export default function Todo() {
     updateTodos(todos.filter((t) => t.id !== id));
   };
 
+  //Todo編集ボタン部位🤖
   const editTodoText = (id, currentText) => {
     const newText = prompt('Todoを編集', currentText); //入力欄にTodoを表示し、
     if (newText === null) return; //入力されなかったら、更新しない。
@@ -82,7 +83,6 @@ export default function Todo() {
           display: 'flex',
           gap: 8,
           flexWrap: 'wrap',
-          alignitems: 'center',
         }}
       >
         <h1> Todo Maker </h1>
