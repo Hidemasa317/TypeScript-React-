@@ -4,7 +4,9 @@
     "@types/react-dom": "^19.2.3"
   },
   "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.4.0",
     "@prisma/client": "^7.4.0",
+    "better-sqlite3": "^12.6.2",
     "prisma": "^7.4.0"
   }
 }
