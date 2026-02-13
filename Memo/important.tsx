@@ -49,35 +49,31 @@ const result: add = (num1, num2) => num1 + num2;
 
 console.log(result(1, 1));
 
-
-
 //ジェネリスク型
 
- //通常版　文字列と数値の関数を別々に定義。
-function getArrayString(items: string[]): string[] {
-    return new Array().concat(items);
+//通常版　文字列と数値の関数を別々に定義。
+// function getArrayString(items: string[]): string[] {
+//     return new Array().concat(items);
+// }
+
+// function getArrayNumber(items: number[]): number[] {
+//     return new Array().concat(items);
+// }
+
+// let stringArray = getArrayString(["apple", "banana"]);
+// let numberArray = getArrayNumber([1, 2, 3]);
+
+//ジェネリスク版
+
+function getArray<T>(items: T[]): T[] {
+  return new Array().concat(items);
 }
 
-function getArrayNumber(items: number[]): number[] {
-    return new Array().concat(items);
-}
-
-let stringArray = getArrayString(["apple", "banana"]);
-let numberArray = getArrayNumber([1, 2, 3]);
-
- //ジェネリスク版
-
- function getArray<T>(items: T[]): T[] {
-    return new Array().concat(items);
-}
-
-let stringArray = getArray(["apple", "banana"]); // string型の配列
+let stringArray = getArray(['apple', 'banana']); // string型の配列
 let numberArray = getArray([1, 2, 3]); // number型の配列
-
 
 //Prisma関連
 
-//①migaration.sql DBの変更履歴 
+//①migaration.sql DBの変更履歴
 //②SQLファイルの作成　dev.db これが実際のデータ保存ファイル
 //DBにTodoテーブルが作成された。
-
