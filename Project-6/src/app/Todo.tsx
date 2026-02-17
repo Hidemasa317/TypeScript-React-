@@ -100,18 +100,30 @@ export default function Todo() {
   };
 
   //削除ボタン部位🤖
+
   const deleteTodo = async (id: string) => {
     const del = await fetch(`/api/todos/${id}`, {
       method: "DELETE",
     });
-    //()内に値を入れると、その値を受け取る機構(アロー関数）となる。
-    // filter 条件に残すものだけ残す。
 
-    //🔴消したいtodoのidを受け取り、『そのTodoを除いた配列を再構築することで、
-    //実質的な削除ボタン機能としている。
+    if (!del.ok) return;
 
-    updateTodos((prev) => prev.filter((t) => t.id !== id));
-  }; //✅prevで最新のものを保証。
+    const reload = await fetch("/api/todos", { cache: "no-store" });
+    const data: TodoType[] = await reload.json();
+    updateTodos(data);
+  };
+  // const deleteTodo = async (id: string) => {
+  //   const del = await fetch(`/api/todos/${id}`, {
+  //     method: "DELETE",
+  //   });
+  //   //()内に値を入れると、その値を受け取る機構(アロー関数）となる。
+  //   // filter 条件に残すものだけ残す。
+
+  //   //🔴消したいtodoのidを受け取り、『そのTodoを除いた配列を再構築することで、
+  //   //実質的な削除ボタン機能としている。
+
+  //   updateTodos((prev) => prev.filter((t) => t.id !== id));
+  // }; //✅prevで最新のものを保証。
 
   //Todo編集ボタン部位🤖
   const editTodoText = async (id: string, currentText: string) => {

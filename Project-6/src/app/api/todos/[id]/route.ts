@@ -3,12 +3,15 @@ import { prisma } from "@/lib/prisma";
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params;
+
   await prisma.todo.update({
-    where: { id: params.id },
+    where: { id },
     data: { isDeleted: true },
   });
+
   return NextResponse.json({ message: "deleted" });
 }
 
