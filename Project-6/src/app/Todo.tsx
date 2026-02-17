@@ -31,21 +31,21 @@ export default function Todo() {
 
         if (!res.ok) {
           const raw = await res.text();
-          alert(GET /api/todos 失敗: ${res.status}\n${raw});
+          alert(`GET /api/todos 失敗: ${res.status}\n${raw}`);
           return;
         }
 
         const ct = res.headers.get("content-type") ?? "";
         if (!ct.includes("application/json")) {
           const raw = await res.text();
-          alert(JSONじゃないものが返ってます: ${ct}\n${raw});
+          alert(`JSONじゃないものが返ってます: ${ct}\n${raw}`);
           return;
         }
 
         const data = (await res.json()) as TodoType[];
         updateTodos(data);
       } catch (e) {
-        alert(loadTodo例外: ${String(e)});
+        alert(`loadTodo例外: ${String(e)}`);
       }
     };
     // const loadTodo = async () => {
@@ -76,7 +76,21 @@ export default function Todo() {
       body: JSON.stringify({ text, date }),
     });
     //✅　⬅️DBから取り出す
+
+    if (!resBox.ok) {
+      alert(`POST /api/todos 失敗: ${resBox.status}\n${await resBox.text()}`);
+      return;
+    }
+
+    const ct = resBox.headers.get("content-type") ?? "";
+    if (!ct.includes("application/json")) {
+      alert(`JSONじゃないものが返ってます: ${ct}\n${await resBox.text()}`);
+      return;
+    }
+
     const saveTodo: TodoType = await resBox.json();
+
+    // const saveTodo: TodoType = await resBox.json();
     //.jsonで、レスポンス本文をjsonで読むボタン🔘.textなら文字列で読むボタン🔘
 
     // updateTodos([...todos, saveTodo]); //updateTodosに配列を渡している。
@@ -87,7 +101,7 @@ export default function Todo() {
 
   //削除ボタン部位🤖
   const deleteTodo = async (id: string) => {
-    const del = await fetch(/api/todos/${id}, {
+    const del = await fetch(`/api/todos/${id}`, {
       method: "DELETE",
     });
     //()内に値を入れると、その値を受け取る機構(アロー関数）となる。
@@ -105,7 +119,7 @@ export default function Todo() {
     if (newText === null) return; //入力されなかったら、更新しない。
 
     //✅New
-    const patch = await fetch(/api/todos/${id}, {
+    const patch = await fetch(`/api/todos/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text: newText }),
@@ -147,7 +161,7 @@ export default function Todo() {
               onChange={(e) => updateText(e.target.value)}
               // 🔹イベントハンドラ属性　onChange{}の形である。
               // 🔹(e)(イベント属性)=>(アロー関数)updatetext(e.target.value(今変更された文字列))
-              placeholder="例：会議"
+              placeholder="例:ABCD"
             />
           </label>
 
