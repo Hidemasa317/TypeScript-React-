@@ -41,26 +41,27 @@ export default function App() {
     setAddr(address);
   };
 
-  return (
-    //   <label
-    //     ><input id="zip" inputmode="numeric" placeholder="郵便番号を入力してください。" />
-    //     <button id="btn">住所変換ボタン</button> </label
-    //   ><!-- 郵便番号入力欄 -->
-    //   <br />
+  //   <label
+  //     ><input id="zip" inputmode="numeric" placeholder="郵便番号を入力してください。" />
+  //     <button id="btn">住所変換ボタン</button> </label
+  //   ><!-- 郵便番号入力欄 -->
+  //   <br />
 
-    //   <br />
-    //   <div class="box">
-    //     <div>住所: <span id="addr">-</span></div>
-    //     <div id="msg"></div>
-    //   </div>
-    // </div>
+  //   <br />
+  //   <div class="box">
+  //     <div>住所: <span id="addr">-</span></div>
+  //     <div id="msg"></div>
+  //   </div>
+  // </div>
+  return (
     <div
       id="container"
       style={{
         width: 400,
         margin: '0 auto',
-        border: '1px solid rgb(240,1,1)',
+        border: '15px ridge rgb(240,1,1)',
         padding: '11px',
+        alignContent: 'baseline',
       }}
     >
       <h1> Address </h1>
