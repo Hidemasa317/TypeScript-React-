@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="jp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=, initial-scale=1.0" />
+    <jptle>郵便番号変換</title>
+  </head>
+  <style>
+    /* #list {
+      border: 1px solid black;
+      padding: 8px;
+      display: inline-block;
+      list-style-position: inside;
+    } */
+
+    #container {
+      width: 400px;
+      margin: 0 auto;
+      border: 1px solid rgb(240, 11, 11);
+      padding: 16px;
+    }
+
+    .box {
+      margin-top: 12px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+  </style>
+  <body>
+    <div id="container">
+      <h1>Address</h1>
+      <label
+        ><input id="zip" inputmode="numeric" placeholder="例:0000000" />
+        <button id="btn">住所変換ボタン</button> </label
+      ><!-- 郵便番号入力欄 -->
+      <br />
+
+      <br />
+      <div class="box">
+        <div>住所: <span id="addr">-</span></div>
+        <div id="msg"></div>
+      </div>
+    </div>
+
+    <script>
+
+      //📦id取得
+      const zip = document.getElementById('zip');
+      const btn = document.getElementById('btn');
+      const addr = document.getElementById('addr');
+      const msg = document.getElementById('msg');
+
+      // 🤖入力値受け取り部、論理演算子でnullなどの際に空文字に。
+      // /\D/g, ''でより整形している。
+      function normalizeZip(zipValue) {
+        return (zipValue || '').replace(/\D/g, '');
+      }
+
+      //🤖api通信部
+      async function apiConnect(zipcode) {
+        const url = `https://zipcloud.ibsnet.co.jp/api/search?zipcode=${encodeURIComponent(zipcode)}`;
+        const res = await fetch(url);
+        const data = await res.json(); //✅Jsonで受け取る。
+
+        const result = data.results[0]; //✅配列の一件目取得
+        return `${result.address1}${result.address2}${result.address3}`; //✅結合して返す。
+      }
+
+      //🤖イベント登録部、エラー表示、
+      btn.addEventListener('click', async () => {
+        msg.textContent = '';
+        addr.textContent = '-';
+
+        const normalizedZip = normalizeZip(zip.value);
+        if (normalizedZip.length !== 7) {
+          msg.textContent = '7桁で入力（ハイフン可）';
+          return; //✅7文字でなければエラー表示。
+        }
+
+        const address = await apiConnect(normalizedZip);
+        addr.textContent = address;
+      });
+    </script>
+  </body>
+</html>

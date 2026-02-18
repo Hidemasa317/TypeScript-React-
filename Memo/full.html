@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>郵便番号 → 住所</title>
+    <style>
+      body { font-family: system-ui, sans-serif; padding: 16px; }
+      input { padding: 8px; }
+      button { padding: 8px 12px; }
+      .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+      .box { margin-top: 12px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+      .err { color: #b00020; }
+    </style>
+  </head>
+  <body>
+    <h1>郵便番号 → 住所</h1>
+
+    <div class="row">
+      <input id="zip" inputmode="numeric" placeholder="例: 1000001" />
+      <button id="btn">住所を取得</button>
+    </div>
+
+    <div class="box">
+      <div>住所: <span id="addr">-</span></div>
+      <div class="err" id="msg"></div>
+    </div>
+
+    <script>
+      const $zip = document.getElementById("zip");
+      const $btn = document.getElementById("btn");
+      const $addr = document.getElementById("addr");
+      const $msg = document.getElementById("msg");
+
+      function normalizeZip(v) {
+        return (v || "").replace(/\D/g, ""); // ハイフン等を除去
+      }
+
+      async function fetchAddress(zipcode) {
+        const url = `https://zipcloud.ibsnet.co.jp/api/search?zipcode=${encodeURIComponent(zipcode)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.status !== 200) throw new Error(data.message || "API error");
+        if (!data.results || data.results.length === 0) throw new Error("該当なし");
+
+        const r = data.results[0];
+        return `${r.address1}${r.address2}${r.address3}`;
+      }
+
+      $btn.addEventListener("click", async () => {
+        $msg.textContent = "";
+        $addr.textContent = "-";
+
+        const zip = normalizeZip($zip.value);
+        if (zip.length !== 7) {
+          $msg.textContent = "郵便番号は7桁で入力してください（ハイフン可）";
+          return;
+        }
+
+        try {
+          const address = await fetchAddress(zip);
+          $addr.textContent = address;
+        } catch (e) {
+          $msg.textContent = String(e.message || e);
+        }
+      });
+    </script>
+  </body>
+</html>
