@@ -11,6 +11,8 @@ export default function App() {
   // ✅🤖入力値受け取り部、論理演算子でnullなどの際に空文字に。
   // /\D/g, ''でより整形している。
   function normalizeZip(zipValue: string) {
+    //🚨normalizeZipは勝手に付けた名称である。
+    //🚨zipValueは関数内限定の引数（呼び出すためだけの変数）🚨
     return (zipValue || '').replace(/\D/g, '');
   }
 

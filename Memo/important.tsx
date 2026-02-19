@@ -77,3 +77,18 @@ let numberArray = getArray([1, 2, 3]); // number型の配列
 //①migaration.sql DBの変更履歴
 //②SQLファイルの作成　dev.db これが実際のデータ保存ファイル
 //DBにTodoテーブルが作成された。
+
+// ✅2・１８
+//✅🤖api通信部
+// これは　async関数である。『必ず、後で❤️Promiseを返す』
+
+// Jsでは通信、通信、。。の繰り返しなので、awaitでPromise（処理結果）が入るのを一旦待って、通信できる。
+
+async function apiConnect(zipcode: string): Promise<string> {
+  const url = `https://zipcloud.ibsnet.co.jp/api/search?zipcode=${encodeURIComponent(zipcode)}`;
+  const res = await fetch(url);
+  const data = await res.json(); //✅Jsonで受け取る。
+
+  const result = data.results[0]; //✅配列の一件目取得
+  return `${result.address1}${result.address2}${result.address3}`; //✅結合して返す。
+}
