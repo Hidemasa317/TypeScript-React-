@@ -1,3 +1,5 @@
+// ✅🤖URL毎のページ本体、描画を担う片割れ。会社ページ・連絡先ページ等を探しに行く。
+
 const stats = [
   { label: '会社', value: 13 },
   { label: '連絡先', value: 21 },
@@ -5,6 +7,7 @@ const stats = [
   { label: '成約した商談', value: 5 },
 ];
 
+//✅🤖進行中の商談　部
 const deals = [
   {
     title: 'タイトル',
@@ -29,6 +32,7 @@ const deals = [
   },
 ];
 
+//✅🤖最近の活動　部
 const activities = [
   {
     title: '電話営業',
@@ -62,7 +66,7 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* 進行中の商談 */}
+      {/* ✅🤖　進行中の商談部 */}
       <section className="rounded-lg border bg-white">
         <div className="flex items-center justify-between border-b px-5 py-4">
           <h2 className="text-sm font-semibold">進行中の商談</h2>
