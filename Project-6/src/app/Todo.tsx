@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 export default function Todo() {
   //------------------関数Todo定義------------------//
@@ -21,13 +21,13 @@ export default function Todo() {
   };
 
   const [todos, updateTodos] = useState<TodoType[]>([]); //オブジェクト型なので、TodoTypeを入れられる。
-  const [text, updateText] = useState<string>("");
-  const [date, updateDate] = useState<string>("");
+  const [text, updateText] = useState<string>('');
+  const [date, updateDate] = useState<string>('');
 
   useEffect(() => {
     const loadTodo = async () => {
       try {
-        const res = await fetch("/api/todos", { cache: "no-store" });
+        const res = await fetch('/api/todos', { cache: 'no-store' });
 
         if (!res.ok) {
           const raw = await res.text();
@@ -35,8 +35,8 @@ export default function Todo() {
           return;
         }
 
-        const ct = res.headers.get("content-type") ?? "";
-        if (!ct.includes("application/json")) {
+        const ct = res.headers.get('content-type') ?? '';
+        if (!ct.includes('application/json')) {
           const raw = await res.text();
           alert(`JSONじゃないものが返ってます: ${ct}\n${raw}`);
           return;
@@ -62,17 +62,17 @@ export default function Todo() {
 
   const addTodo = async () => {
     //asyncで、awaitが使えるようになる。
-    if (!text) return alert("Todoを入力してください");
-    if (!date) return alert("期日を入力してください");
+    if (!text) return alert('Todoを入力してください');
+    if (!date) return alert('期日を入力してください');
 
     // fetch("/api/todos");のみを書いたら、自動的にGETメソッドになる。
 
     //✅　➡️POSTでDBに送信
-    const resBox = await fetch("/api/todos", {
+    const resBox = await fetch('/api/todos', {
       // fetch レスポンス　オブジェクト //fetchはResponceというオブジェクト。
       // 🟤　fetch("https://google.com")と同じ。🟤. 🟡Responceの匣📦🟡
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text, date }),
     });
     //✅　⬅️DBから取り出す
@@ -82,8 +82,8 @@ export default function Todo() {
       return;
     }
 
-    const ct = resBox.headers.get("content-type") ?? "";
-    if (!ct.includes("application/json")) {
+    const ct = resBox.headers.get('content-type') ?? '';
+    if (!ct.includes('application/json')) {
       alert(`JSONじゃないものが返ってます: ${ct}\n${await resBox.text()}`);
       return;
     }
@@ -95,20 +95,20 @@ export default function Todo() {
 
     // updateTodos([...todos, saveTodo]); //updateTodosに配列を渡している。
     updateTodos((prev) => [...prev, saveTodo]); //✅prevで最新のものを保証してくれるReact機能。
-    updateText(""); //🌟updateTextは更新値であった。それを空Text
-    updateDate(""); //🌟updateDateは更新値であった。それを空にする。
+    updateText(''); //🌟updateTextは更新値であった。それを空Text
+    updateDate(''); //🌟updateDateは更新値であった。それを空にする。
   };
 
   //削除ボタン部位🤖
 
   const deleteTodo = async (id: string) => {
     const del = await fetch(`/api/todos/${id}`, {
-      method: "DELETE",
+      method: 'DELETE',
     });
 
     if (!del.ok) return;
 
-    const reload = await fetch("/api/todos", { cache: "no-store" });
+    const reload = await fetch('/api/todos', { cache: 'no-store' });
     const data: TodoType[] = await reload.json();
     updateTodos(data);
   };
@@ -127,17 +127,17 @@ export default function Todo() {
 
   //Todo編集ボタン部位🤖
   const editTodoText = async (id: string, currentText: string) => {
-    const newText = prompt("Todoを編集", currentText); //入力欄にTodoを表示し、
+    const newText = prompt('Todoを編集', currentText); //入力欄にTodoを表示し、
     if (newText === null) return; //入力されなかったら、更新しない。
 
     //✅New
     const patch = await fetch(`/api/todos/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: newText }),
     });
     updateTodos((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, text: newText } : t))
+      prev.map((t) => (t.id === id ? { ...t, text: newText } : t)),
     );
     //🟢map で、()内の要素を見て、新しい配列を返す。
     //id一致時　＝＝＝　の時、三項演算子が発動する。 一致の時、id 左（新しいtxtに置き換え。、否（false）の時、右（t)（変更しない）を返す。
@@ -155,12 +155,12 @@ export default function Todo() {
       <div
         style={{
           maxWidth: 600,
-          margin: "0 auto",
+          margin: '0 auto',
           padding: 16,
           border: 5,
-          display: "flex",
+          display: 'flex',
           gap: 8,
-          flexWrap: "wrap",
+          flexWrap: 'wrap',
         }}
       >
         <h1> Todo Maker </h1>
@@ -195,9 +195,9 @@ export default function Todo() {
               key={t.id}
               style={{
                 marginTop: 16,
-                border: "1px solid black",
+                border: '1px solid black',
                 padding: 8,
-                listStyle: "none", //リストの・を枠の内側に。
+                listStyle: 'none', //リストの・を枠の内側に。
                 borderRadius: 4,
               }}
             >
@@ -205,10 +205,10 @@ export default function Todo() {
                 {t.text}（{t.date}）
               </span>
 
-              <span style={{ display: "flex", gap: 8 }}>
+              <span style={{ display: 'flex', gap: 8 }}>
                 <button onClick={() => editTodoText(t.id, t.text)}>
                   Todo編集
-                </button>{" "}
+                </button>{' '}
                 {/** Todo編集ボタン*/}
                 <button onClick={() => deleteTodo(t.id)}>削除</button>
                 {/** 削除ボタン */}
