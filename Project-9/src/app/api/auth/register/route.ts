@@ -31,7 +31,7 @@ export async function POST(req: Request) {
 
   const user = await prisma.user.create({
     data: { name, email, passwordHash }, // role は default が入る
-    select: { id: true, name: true, email: true, role: true, createdAt: true },
+    select: { name: true, email: true, role: true, createdAt: true },
   });
 
   return NextResponse.json({ user }, { status: 201 });
