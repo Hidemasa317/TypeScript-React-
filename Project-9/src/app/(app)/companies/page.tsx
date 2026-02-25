@@ -19,21 +19,6 @@ export default function CompaniesPage() {
               <th className="px-5 py-3 text-left font-medium">アクション</th>
             </tr>
           </thead>
-          {/* <tbody className="divide-y">
-              {deals.map((d, i) => (
-                <tr key={i} className="bg-white">
-                  <td className="px-5 py-4 font-medium text-indigo-600">
-                    {d.title}
-                  </td>
-                  <td className="px-5 py-4 text-indigo-600">{d.company}</td>
-                  <td className="px-5 py-4">{d.amount}</td>
-                  <td className="px-5 py-4">
-                    <StatusPill text={d.status} />
-                  </td>
-                  <td className="px-5 py-4">{d.close}</td>
-                </tr>
-              ))}
-            </tbody> */}
         </table>
       </div>
     </section>

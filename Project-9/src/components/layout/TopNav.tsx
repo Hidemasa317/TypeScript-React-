@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const tabs = [
-  { href: '/', label: 'ダッシュボード' },
+  { href: '/dashboard', label: 'ダッシュボード' },
   { href: '/companies', label: '会社' },
   { href: '/contacts', label: '連絡先' },
   { href: '/deals', label: '商談' },
@@ -30,7 +30,7 @@ export default function TopNav() {
                   key={t.href}
                   href={t.href}
                   className={[
-                    'relative py-4 text-gray-600 hover:text-gray-900',
+                    'relative py-4 text-gray-900 hover:text-gray-900',
                     active ? 'text-gray-900 font-semibold' : '',
                   ].join(' ')}
                 >

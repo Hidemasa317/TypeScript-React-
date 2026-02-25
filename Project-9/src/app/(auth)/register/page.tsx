@@ -1,3 +1,8 @@
+// ✅Reactだけの場合。<a href="/login">Log in</a>
+// ✅Next.jsでは、<Link href="/login">Log in</Link>を使う。
+// ✅Linkの方がaより、高速であり、プリフェッチなどを行う。
+// ✅LinkやRegisterFormはコンポーネント・UIを返す関数。❶先頭が大文字❷<ーー/>の形❸JSXを返す。
+// ✅　➡️小文字・htmlタグ、大文字・コンポートネント
 import Link from 'next/link';
 import RegisterForm from '@/components/auth/RegisterForm';
 

@@ -2,12 +2,22 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 
+// ✅export async function POST() {} で、POSTリクエストが来た時に実行される関数。
+// ✅　req: Request は、ブラウザからのリクエスト情報。body・headers・method・url。
+// fetch('/api/auth/register', {
+//   method: 'POST',
+//   body: JSON.stringify({ name, email, password }),
+// });　　　を受け取るには、➡️ ✅　await req.json()
+
 export async function POST(req: Request) {
   const { email, password } = (await req.json()) as {
+    // ✅ as で、型指定。
     email?: string;
+    // ✅　?で、無い可能性もある。　という意味も持つ。jsonの中身には本当にnameなどが含まれているかわからないため。
     password?: string;
   };
 
+  // ✅　OR条件
   if (!email || !password) {
     return NextResponse.json(
       { message: '入力が不足しています' },
@@ -15,6 +25,9 @@ export async function POST(req: Request) {
     );
   }
 
+  // ✅　emailは、schema.prismaで『email     String   @unique』と指定しているので、
+  // 　findUniqueが使える。　await(通信待つ)　prisma.user(Userテーブル操作).findUnique
+  // ✅　where: {email}で、一致するレコードを探す。select: で、このカラムのみ取得と云う。
   const user = await prisma.user.findUnique({
     where: { email },
     select: {
@@ -28,6 +41,7 @@ export async function POST(req: Request) {
 
   if (!user) {
     return NextResponse.json(
+      // ✅　NextResponse.json(データ, オプション)
       { message: 'メールまたはパスワードが違います' },
       { status: 401 },
     );
@@ -53,7 +67,7 @@ export async function POST(req: Request) {
     { status: 200 },
   );
 
-  // 学習用の最小：ログイン済みフラグcookie
+  // ログイン済みフラグcookie
   res.cookies.set('login', '1', {
     httpOnly: true,
     sameSite: 'lax',

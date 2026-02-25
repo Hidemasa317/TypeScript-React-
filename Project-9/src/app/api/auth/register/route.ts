@@ -2,6 +2,14 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 
+// ✅export async function POST() {} で、POSTリクエストが来た時に実行される関数。
+// ✅　req: Request は、ブラウザからのリクエスト情報。body・headers・method・url。
+// fetch('/api/auth/register', {
+//   method: 'POST',
+//   body: JSON.stringify({ name, email, password }),
+// });　　　を受け取るには、➡️ ✅　await req.json()
+
+// ✅const{} = は、右側がオブジェクトの際のみ使用可能。
 export async function POST(req: Request) {
   const { name, email, password } = (await req.json()) as {
     name?: string;
