@@ -68,12 +68,19 @@ export async function POST(req: Request) {
   );
 
   // ログイン済みフラグcookie
-  res.cookies.set('login', '1', {
+
+  res.cookies.set('uid', user.id.toString(), {
     httpOnly: true,
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 60 * 24,
   });
+  // res.cookies.set('login', '1', {
+  //   httpOnly: true,
+  //   sameSite: 'lax',
+  //   path: '/',
+  //   maxAge: 60 * 60 * 24,
+  // });
 
   return res;
 }

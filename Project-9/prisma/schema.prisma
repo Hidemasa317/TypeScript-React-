@@ -7,17 +7,27 @@ datasource db {
 }
 
 model User {
-  id        BigInt   @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  passwordHash  String
-  role      String   @default("sales_person")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           BigInt   @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("sales_person")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // ★ 追加（逆向きリレーション）
+  companies  Company[]
+  contacts   Contact[]
+  deals      Deal[]
+  activities Activity[]
 }
 
 model Company {
   id        BigInt   @id @default(autoincrement())
+
+  userId    BigInt
+  user      User     @relation(fields: [userId], references: [id])
+
   name      String
   industry  String?
   address   String?
@@ -27,4 +37,135 @@ model Company {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  contacts   Contact[]
+  deals      Deal[]
+  activities Activity[]
+
+  @@index([userId])
+}
+
+// --- enums（要件 3.5.2 / 3.6.2 / 3.6.3 に記載の値） ---
+enum DealStatus {
+  prospecting
+  qualification
+  needs_analysis
+  proposal
+  negotiation
+  closed_won
+  closed_lost
+}
+
+enum ActivityType {
+  call
+  email
+  meeting
+  task
+  note
+}
+
+enum ActivityStatus {
+  scheduled
+  completed
+  cancelled
+}
+
+// --- Contact（要件 5.1 Contact）---
+model Contact {
+  id BigInt @id @default(autoincrement())
+
+  companyId BigInt
+  userId    BigInt
+
+  firstName String
+  lastName  String
+  position  String?
+  email     String?
+  phone     String?
+  mobile    String?
+  note      String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // relations
+  company Company @relation(fields: [companyId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  deals      Deal[]
+  activities Activity[]
+
+  @@index([companyId])
+  @@index([userId])
+  @@index([deletedAt])
+}
+
+// --- Deal（要件 5.1 Deal）---
+model Deal {
+  id BigInt @id @default(autoincrement())
+
+  companyId BigInt
+  userId    BigInt
+  contactId BigInt? // 要件 5.1: nullable（contact_id FK nullable）
+
+  title               String
+  amount              Decimal?
+  status              DealStatus
+  expectedClosingDate DateTime? // 要件は date。PrismaはDateTimeで扱うのが一般的（DB側はdateでもOK）
+  probability         Int?
+  description         String?
+  note                String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // relations
+  company Company  @relation(fields: [companyId], references: [id])
+  user    User     @relation(fields: [userId], references: [id])
+  contact Contact? @relation(fields: [contactId], references: [id])
+
+  activities Activity[]
+
+  @@index([companyId])
+  @@index([userId])
+  @@index([contactId])
+  @@index([status])
+  @@index([deletedAt])
+}
+
+// --- Activity（要件 5.1 Activity）---
+model Activity {
+  id BigInt @id @default(autoincrement())
+
+  userId    BigInt
+  companyId BigInt? // 要件 3.6.1「関連先（会社、連絡先、商談）」なので選択式に合わせてnullable
+  contactId BigInt?
+  dealId    BigInt?
+
+  type        ActivityType
+  title       String
+  description String?
+  scheduledAt DateTime?
+  completedAt DateTime?
+  status      ActivityStatus
+  outcome     String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // relations
+  user    User     @relation(fields: [userId], references: [id])
+  company Company? @relation(fields: [companyId], references: [id])
+  contact Contact? @relation(fields: [contactId], references: [id])
+  deal    Deal?    @relation(fields: [dealId], references: [id])
+
+  @@index([userId])
+  @@index([companyId])
+  @@index([contactId])
+  @@index([dealId])
+  @@index([status])
+  @@index([deletedAt])
 }
