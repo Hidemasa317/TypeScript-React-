@@ -38,15 +38,36 @@ export default async function CompaniesPage() {
               <th className="px-5 py-3 text-left">名前</th>
               <th className="px-5 py-3 text-left">業界</th>
               <th className="px-5 py-3 text-left">電話番号</th>
+              <th className="px-5 py-3 text-left">ウェブサイト</th>
               <th className="px-5 py-3 text-left">アクション</th>
             </tr>
           </thead>
           <tbody className="divide-y">
             {companies.map((c) => (
               <tr key={String(c.id)}>
-                <td className="px-5 py-4">{c.name}</td>
+                <td className="px-5 py-4">
+                  <Link
+                    href={`/companies/${c.id}`}
+                    className="text-indigo-600 hover:underline"
+                  >
+                    {c.name}
+                  </Link>
+                </td>
                 <td className="px-5 py-4">{c.industry ?? '-'}</td>
                 <td className="px-5 py-4">{c.phone ?? '-'}</td>
+                <td className="px-5 py-4">
+                  {c.website ? (
+                    <a
+                      href={c.website}
+                      target="_blank"
+                      className="text-indigo-600"
+                    >
+                      {c.website}
+                    </a>
+                  ) : (
+                    '-'
+                  )}
+                </td>
                 <td className="px-5 py-4">
                   <RowActions id={String(c.id)} />
                 </td>
