@@ -7,23 +7,30 @@ export default function RowActions({ id }: { id: string }) {
   const router = useRouter();
 
   async function onDelete() {
-    if (!confirm('削除しますか？')) return;
+    if (!confirm('本当に削除しますか？')) return;
 
-    const res = await fetch(`/api/companies/${id}`, { method: 'DELETE' });
-    if (!res.ok) return alert('削除に失敗しました');
+    const res = await fetch(`/api/companies/${id}`, {
+      method: 'DELETE',
+    });
 
-    router.refresh();
+    if (!res.ok) {
+      alert('削除に失敗しました');
+      return;
+    }
+
+    router.refresh(); // 一覧再取得
   }
 
   return (
     <div className="flex gap-4">
       <Link
-        className="text-indigo-600 hover:underline"
         href={`/companies/${id}/edit`}
+        className="text-indigo-600 hover:underline"
       >
         編集
       </Link>
-      <button className="text-red-600 hover:underline" onClick={onDelete}>
+
+      <button onClick={onDelete} className="text-red-600 hover:underline">
         削除
       </button>
     </div>

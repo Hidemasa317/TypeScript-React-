@@ -1,11 +1,5 @@
+import { prisma } from '@/lib/prisma';
 // ✅🤖URL毎のページ本体、描画を担う片割れ。会社ページ・連絡先ページ等を探しに行く。
-
-const stats = [
-  { label: '会社', value: 13 },
-  { label: '連絡先', value: 21 },
-  { label: '商談', value: 22 },
-  { label: '成約した商談', value: 5 },
-];
 
 //✅🤖進行中の商談　部
 const deals = [
@@ -51,17 +45,34 @@ function StatusPill({ text }: { text: string }) {
   );
 }
 
-export default function DashboardPage() {
+// ✅関数　DashboardPage部
+
+export default async function DashboardPage() {
+  // ✅🔵DBから会社数を取得。🔵
+  const companyCount = await prisma.company.count();
+
+  const statscount = [
+    { label: '会社', value: companyCount },
+    // { label: '連絡先', value: 21 },
+    // { label: '商談', value: 22 },
+    // { label: '成約した商談', value: 5 },
+  ];
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold">ダッシュボード</h1>
 
-      {/* 上のカード */}
+      {/* ✅🤖上部カード */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((s) => (
+        {/* ✅配列の数分、UIを繰り返す。 */}
+        {statscount.map((s) => (
           <div key={s.label} className="rounded-lg border bg-white p-5">
+            {/* ✅label・会社を取得 */}
             <div className="text-sm text-gray-600">{s.label}</div>
-            <div className="mt-2 text-3xl font-semibold">{s.value}</div>
+            {/* ✅conpanyCountを取得 */}
+            <div className="mt-2 text-3xl font-semibold">
+              登録社数 : {s.value}
+            </div>
           </div>
         ))}
       </div>

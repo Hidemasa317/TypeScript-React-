@@ -2,16 +2,6 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
 
-function toCompanyJson(c: any) {
-  return {
-    ...c,
-    id: c.id.toString(),
-    userId: c.userId.toString(),
-    createdAt: c.createdAt.toISOString(),
-    updatedAt: c.updatedAt.toISOString(),
-  };
-}
-
 async function getUserId(): Promise<bigint | null> {
   const store = await cookies();
   const uid = store.get('uid')?.value;
@@ -19,7 +9,8 @@ async function getUserId(): Promise<bigint | null> {
   return BigInt(uid);
 }
 
-// PUT /api/companies/:id
+// PUT（編集）
+
 export async function PUT(
   req: Request,
   context: { params: Promise<{ id: string }> },
@@ -27,49 +18,38 @@ export async function PUT(
   const { id: idParam } = await context.params;
 
   const userId = await getUserId();
-  if (!userId)
+  if (!userId) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
 
   const id = BigInt(idParam);
-
-  const body = (await req.json()) as {
-    name?: string;
-    industry?: string;
-    address?: string;
-    phone?: string;
-    website?: string;
-    note?: string;
-  };
-
-  if (!body.name?.trim()) {
-    return NextResponse.json({ message: '会社名は必須です' }, { status: 400 });
-  }
 
   const existing = await prisma.company.findFirst({
     where: { id, userId },
   });
-  if (!existing)
-    return NextResponse.json({ message: 'Not Found' }, { status: 404 });
 
-  const company = await prisma.company.update({
+  if (!existing) {
+    return NextResponse.json({ message: 'Not Found' }, { status: 404 });
+  }
+
+  const body = await req.json();
+
+  const updated = await prisma.company.update({
     where: { id },
     data: {
-      name: body.name.trim(),
-      industry: body.industry?.trim() || null,
-      address: body.address?.trim() || null,
-      phone: body.phone?.trim() || null,
-      website: body.website?.trim() || null,
-      note: body.note?.trim() || null,
+      name: body.name,
+      industry: body.industry,
+      phone: body.phone,
+      address: body.address,
+      website: body.website,
+      note: body.note,
     },
   });
 
-  return NextResponse.json(
-    { company: toCompanyJson(company) },
-    { status: 200 },
-  );
+  return NextResponse.json(updated);
 }
 
-// DELETE /api/companies/:id
+// DELETE（削除）
 export async function DELETE(
   _: Request,
   context: { params: Promise<{ id: string }> },
@@ -77,18 +57,23 @@ export async function DELETE(
   const { id: idParam } = await context.params;
 
   const userId = await getUserId();
-  if (!userId)
+  if (!userId) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
 
   const id = BigInt(idParam);
 
   const existing = await prisma.company.findFirst({
     where: { id, userId },
   });
-  if (!existing)
+
+  if (!existing) {
     return NextResponse.json({ message: 'Not Found' }, { status: 404 });
+  }
 
-  await prisma.company.delete({ where: { id } });
+  await prisma.company.delete({
+    where: { id },
+  });
 
-  return NextResponse.json({ ok: true }, { status: 200 });
+  return NextResponse.json({ ok: true });
 }
