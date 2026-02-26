@@ -9,7 +9,7 @@ export default function RowActions({ id }: { id: string }) {
   async function onDelete() {
     if (!confirm('本当に削除しますか？')) return;
 
-    const res = await fetch(`/api/companies/${id}`, {
+    const res = await fetch(`/api/contacts/${id}`, {
       method: 'DELETE',
     });
 
@@ -24,7 +24,7 @@ export default function RowActions({ id }: { id: string }) {
   return (
     <div className="flex gap-4">
       <Link
-        href={`/companies/${id}/edit`}
+        href={`/contacts/${id}/edit`}
         className="text-indigo-600 hover:underline"
       >
         編集
