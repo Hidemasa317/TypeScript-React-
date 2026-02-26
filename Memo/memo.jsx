@@ -112,3 +112,14 @@ export default function Todo() {
     </div>
   );
 }
+
+// ✅　website要素部分🤖
+<td className="px-5 py-4">
+  {c.website ? (
+    <a href={c.website} target="_blank" className="text-indigo-600">
+      {c.website}
+    </a>
+  ) : (
+    '-'
+  )}
+</td>;

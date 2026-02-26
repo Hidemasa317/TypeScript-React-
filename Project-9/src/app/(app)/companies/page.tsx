@@ -13,6 +13,7 @@ export default async function CompaniesPage() {
 
   const userId = BigInt(uid);
 
+  // ✅prismaで　companyテーブルから取得し、格納。
   const companies = await prisma.company.findMany({
     where: { userId },
     orderBy: { createdAt: 'desc' },
@@ -43,8 +44,10 @@ export default async function CompaniesPage() {
             </tr>
           </thead>
           <tbody className="divide-y">
+            {/* ✅map で、格納された定数から取り出す。 */}
             {companies.map((c) => (
               <tr key={String(c.id)}>
+                {/* ✅会社名 */}
                 <td className="px-5 py-4">
                   <Link
                     href={`/companies/${c.id}`}
@@ -53,8 +56,11 @@ export default async function CompaniesPage() {
                     {c.name}
                   </Link>
                 </td>
+                {/* ✅業界 */}
                 <td className="px-5 py-4">{c.industry ?? '-'}</td>
+                {/* ✅電話番号 */}
                 <td className="px-5 py-4">{c.phone ?? '-'}</td>
+                {/* ✅ウェブサイト */}
                 <td className="px-5 py-4">
                   {c.website ? (
                     <a
@@ -69,6 +75,7 @@ export default async function CompaniesPage() {
                   )}
                 </td>
                 <td className="px-5 py-4">
+                  {/* ✅🤖アクション 編集削除 部位 */}
                   <RowActions id={String(c.id)} />
                 </td>
               </tr>

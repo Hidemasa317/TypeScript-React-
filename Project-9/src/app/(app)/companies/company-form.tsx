@@ -1,5 +1,6 @@
 'use client';
 
+// ✅🤖　ーーーーーーーーーーーーー会社を追加ページーーーーーーーーーーーーーーーー
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
