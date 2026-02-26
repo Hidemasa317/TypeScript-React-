@@ -13,7 +13,7 @@ export default async function ContactsPage() {
 
   const userId = BigInt(uid);
 
-  // ✅prismaで　companyテーブルから取得し、格納。
+  // ✅prismaで　contactテーブルから取得し、格納。
   const contacts = await prisma.contact.findMany({
     where: { userId },
     include: { company: true }, //✅🚨

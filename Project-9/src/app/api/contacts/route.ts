@@ -31,7 +31,7 @@ export async function GET() {
   });
 
   return NextResponse.json(
-    { companies: contacts.map(toContactJson) },
+    { contacts: contacts.map(toContactJson) },
     { status: 200 },
   );
 }
@@ -50,8 +50,9 @@ export async function POST(req: Request) {
     // // phone String?
     // mobile String?
     // / note String?
-    firstname?: string;
-    lastname?: string;
+    companyId?: string; //✅🚨追加忘れ。
+    firstName?: string;
+    lastName?: string;
     position?: string;
     email?: string;
     phone?: string;
@@ -59,16 +60,24 @@ export async function POST(req: Request) {
     note?: string;
   };
 
-  if (!body.lastname?.trim()) {
+  if (!body.lastName?.trim()) {
     return NextResponse.json({ message: '姓は必須です' }, { status: 400 });
   }
 
-  const company = await prisma.contact.create({
+  if (!body.firstName?.trim()) {
+    return NextResponse.json({ message: '名は必須です' }, { status: 400 });
+  }
+
+  if (!body.companyId) {
+    return NextResponse.json({ message: '会社は必須です' }, { status: 400 });
+  }
+
+  const contact = await prisma.contact.create({
     data: {
-      // userId直入れで型エラーが出る環境があるので、connect方式（確実）
       user: { connect: { id: userId } },
-      firstname: body.firstname.trim(),
-      lastname: body.lastname?.trim() || '',
+      company: { connect: { id: BigInt(body.companyId) } },
+      firstName: body.firstName.trim(),
+      lastName: body.lastName.trim(),
       position: body.position?.trim() || null,
       email: body.email?.trim() || null,
       phone: body.phone?.trim() || null,
@@ -77,8 +86,23 @@ export async function POST(req: Request) {
     },
   });
 
+  // const contact = await prisma.contact.create({
+  //   data: {
+  //     // userId直入れで型エラーが出る環境があるので、connect方式（確実）
+  //     user: { connect: { id: userId } },
+  //     company: { connect: { id: BigInt(body.companyId) } },
+  //     firstName: body.firstName?.trim() || '',
+  //     lastName: body.lastName?.trim() || '',
+  //     position: body.position?.trim() || null,
+  //     email: body.email?.trim() || null,
+  //     phone: body.phone?.trim() || null,
+  //     mobile: body.mobile?.trim() || null,
+  //     note: body.note?.trim() || null,
+  //   },
+  // });
+
   return NextResponse.json(
-    { company: toContactJson(company) },
+    { contact: toContactJson(contact) },
     { status: 201 },
   );
 }
