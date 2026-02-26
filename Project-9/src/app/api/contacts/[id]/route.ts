@@ -9,6 +9,7 @@ function toContactJson(c: any) {
     ...c,
     id: c.id.toString(),
     userId: c.userId.toString(),
+    companyId: c.companyId.toString(),
     createdAt: c.createdAt.toISOString(),
     updatedAt: c.updatedAt.toISOString(),
   };

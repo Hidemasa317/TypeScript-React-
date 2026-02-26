@@ -50,28 +50,36 @@ function StatusPill({ text }: { text: string }) {
 export default async function DashboardPage() {
   // ✅🔵DBから会社数を取得。🔵
   const companyCount = await prisma.company.count();
-
-  const statscount = [
-    { label: '会社', value: companyCount },
-    // { label: '連絡先', value: 21 },
-    // { label: '商談', value: 22 },
-    // { label: '成約した商談', value: 5 },
-  ];
+  const cmpcount = [{ label: '会社', value: companyCount }];
+  // ✅🔵DBから連絡先数を取得。🔵
+  const contactCount = await prisma.contact.count();
+  const ctcCount = [{ label: '連絡先', value: contactCount }];
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold">ダッシュボード</h1>
 
-      {/* ✅🤖上部カード */}
+      {/* ✅🤖カード部 */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* ✅配列の数分、UIを繰り返す。 */}
-        {statscount.map((s) => (
+        {cmpcount.map((s) => (
           <div key={s.label} className="rounded-lg border bg-white p-5">
             {/* ✅label・会社を取得 */}
             <div className="text-sm text-gray-600">{s.label}</div>
             {/* ✅conpanyCountを取得 */}
             <div className="mt-2 text-3xl font-semibold">
               登録社数 : {s.value}
+            </div>
+          </div>
+        ))}
+
+        {ctcCount.map((s) => (
+          <div key={s.label} className="rounded-lg border bg-white p-5">
+            {/* ✅label・会社を取得 */}
+            <div className="text-sm text-gray-600">{s.label}</div>
+            {/* ✅conpanyCountを取得 */}
+            <div className="mt-2 text-3xl font-semibold">
+              連絡先数 : {s.value}
             </div>
           </div>
         ))}

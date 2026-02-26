@@ -67,6 +67,7 @@ export default function ContactsForm({
     // useRouter()はURLを変える。
     alert('成功');
     router.push('/contacts');
+    router.refresh();
   }
 
   return (
