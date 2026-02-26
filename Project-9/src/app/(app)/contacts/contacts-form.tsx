@@ -1,100 +1,179 @@
-import Link from 'next/link';
-import { prisma } from '@/lib/prisma';
-import { cookies } from 'next/headers';
-import RowActions from './row-actions';
+'use client';
 
-export default async function ContactsPage() {
-  const store = await cookies();
-  const uid = store.get('uid')?.value;
+// ✅🤖　ーーーーーーーーーーーーー連絡先を追加ページーーーーーーーーーーーーーーーー
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-  if (!uid) {
-    return <div className="p-6">ログインしてください</div>;
-  }
+type Values = {
+  companyId: string; //✅会社をプルダウンで表示する準備。
+  firstName: string;
+  lastName: string;
+  position: string;
+  email: string;
+  phone: string;
+  mobile: string;
+  note: string;
+};
 
-  const userId = BigInt(uid);
-
-  // ✅prismaで　contactテーブルから取得し、格納。
-  const contacts = await prisma.contact.findMany({
-    where: { userId },
-    include: { company: true }, //✅🚨
-    orderBy: { createdAt: 'desc' },
+export default function ContactsForm({
+  mode,
+  id,
+  initial,
+  companies, //✅
+}: {
+  mode: 'create' | 'edit';
+  id?: string;
+  initial?: Partial<Values>;
+  companies: { id: string; name: string }[]; //✅
+}) {
+  const router = useRouter();
+  const [v, setV] = useState<Values>({
+    companyId: initial?.companyId ?? '',
+    firstName: initial?.firstName ?? '',
+    lastName: initial?.lastName ?? '',
+    position: initial?.position ?? '',
+    email: initial?.email ?? '',
+    phone: initial?.phone ?? '',
+    mobile: initial?.mobile ?? '',
+    note: initial?.note ?? '',
   });
 
+  async function onSave() {
+    const url = mode === 'edit' ? `/api/contacts/${id}` : '/api/contacts';
+
+    const method = mode === 'edit' ? 'PUT' : 'POST';
+
+    console.log('mode:', mode);
+    console.log('url:', url);
+    console.log('method:', method);
+
+    const res = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(v),
+    });
+
+    console.log('status:', res.status);
+
+    const text = await res.text();
+    console.log('response text:', text);
+
+    if (!res.ok) {
+      alert(`失敗: ${res.status}`);
+      return;
+    }
+    // ✅URLを変えることは
+    // ページを切り替えることと同義になる。
+    // useRouter()はURLを変える。
+    alert('成功');
+    router.push('/contacts');
+  }
+
   return (
-    <section className="rounded-lg border bg-white">
-      <div className="flex items-center justify-between border-b px-5 py-4">
-        <h1 className="text-sm font-semibold">連絡先</h1>
-        {/* Linkはサーバコンポーネントで使用できる。 */}
-        <Link
-          href="/contacts/new"
-          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
+    <section className="rounded-lg border bg-white p-6 space-y-4">
+      {/* 🚨ここに会社選択欄を追加 */}
+      <div>
+        <label className="block text-sm font-medium text-slate-700">会社</label>
+        <select
+          className="mt-2 w-full rounded-md border px-3 py-2"
+          value={v.companyId}
+          onChange={(e) => setV({ ...v, companyId: e.target.value })}
         >
-          連絡先を追加
-        </Link>
+          <option value="">選択してください</option>
+          {companies.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-sm">
-          <thead className="bg-gray-50 text-gray-800">
-            <tr>
-              <th className="px-5 py-3 text-left">名前</th>
-              <th className="px-5 py-3 text-left">会社</th>
-              <th className="px-5 py-3 text-left">役職</th>
-              <th className="px-5 py-3 text-left">メール</th>
-              <th className="px-5 py-3 text-left">電話番号</th>
-              <th className="px-5 py-3 text-left">アクション</th>
-              {/* // firstName String 
-              // // lastName String 
-              // // position String? 
-              // //email String? 
-              // // phone String? 
-              // mobile String? 
-              // / note String? */}
-            </tr>
-          </thead>
-          <tbody className="divide-y">
-            {/* ✅map で、格納された定数から取り出す。 */}
-            {contacts.map((c) => (
-              <tr key={String(c.id)}>
-                {/* ✅　❶氏名　*/}
-                <td className="px-5 py-4">
-                  <Link
-                    href={`/contacts/${c.id}`}
-                    className="text-indigo-600 hover:underline"
-                  >
-                    {c.firstName}
-                    {c.lastName}
-                  </Link>
-                </td>
-                {/* ✅　❷会社　ここに❶を移行 */}
-                <td className="px-5 py-4">
-                  {c.company ? (
-                    <Link
-                      href={`/companies/${c.companyId}`}
-                      className="text-indigo-600 hover:underline"
-                    >
-                      {c.company.name}
-                    </Link>
-                  ) : (
-                    '-'
-                  )}
-                </td>
-                {/* ✅ ❸役職 リンクは必要ない　*/}
-                <td className="px-5 py-4">{c.position ?? '-'}</td>
-                {/* ✅　❹メール リンクは必要ない。 */}
-                <td className="px-5 py-4">{c.email ?? '-'}</td>
-                {/* ✅　❺電話番号　リンクは必要ない */}
-                <td className="px-5 py-4">{c.phone ?? '-'}</td>
+      {/* ✅⬇️🤖 各フィールド部 */}
+      <Field
+        label="名"
+        value={v.firstName}
+        onChange={(x) => setV({ ...v, firstName: x })}
+      />
+      <Field
+        label="姓"
+        value={v.lastName}
+        onChange={(x) => setV({ ...v, lastName: x })}
+      />
+      <Field
+        label="役職"
+        value={v.position}
+        onChange={(x) => setV({ ...v, position: x })}
+      />
+      <Field
+        label="メール"
+        value={v.email}
+        onChange={(x) => setV({ ...v, email: x })}
+      />
+      <Field
+        label="電話番号"
+        value={v.phone}
+        onChange={(x) => setV({ ...v, phone: x })}
+      />
+      <Field
+        label="携帯番号"
+        value={v.phone}
+        onChange={(x) => setV({ ...v, phone: x })}
+      />
+      <Field
+        label="備考"
+        value={v.note}
+        onChange={(x) => setV({ ...v, note: x })}
+        textarea
+      />
 
-                <td className="px-5 py-4">
-                  {/* ✅🤖　❻アクション 編集削除 部位 */}
-                  <RowActions id={String(c.id)} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="flex justify-end gap-3 pt-2">
+        <button
+          className="rounded-md border px-4 py-2 text-sm"
+          onClick={() => router.push('/contacts')}
+        >
+          キャンセル
+        </button>
+        <button
+          className="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
+          onClick={onSave}
+        >
+          保存
+        </button>
       </div>
     </section>
+  );
+}
+
+function Field({
+  label,
+  value,
+  onChange,
+  textarea,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  textarea?: boolean;
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-slate-700">
+        {label}
+      </label>
+      {textarea ? (
+        <textarea
+          className="mt-2 w-full rounded-md border px-3 py-2"
+          rows={4}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      ) : (
+        <input
+          className="mt-2 w-full rounded-md border px-3 py-2"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      )}
+    </div>
   );
 }

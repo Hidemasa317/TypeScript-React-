@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import DeleteButton from './delete-button';
 
+//. ✅ーーー会社詳細ページーーー
+
 type Props = {
   params: Promise<{ id: string }>;
 };
