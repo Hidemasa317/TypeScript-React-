@@ -34,3 +34,38 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Next.js 16: `params` Promise エラー対処
+
+次のエラーが出た場合:
+
+```txt
+Route "/api/todos/[id]" used `params.id`. `params` is a Promise and must be unwrapped with `await` ...
+```
+
+原因は **Next.js 16 の Route Handler で `params` が Promise になったため** です。
+
+`src/app/api/todos/[id]/route.ts` は次の形にしてください（`await params` が必須）。
+
+```ts
+import { NextResponse } from 'next/server';
+
+export async function DELETE(
+  _req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
+  // await prisma.todo.delete({ where: { id } });
+  return NextResponse.json({ ok: true });
+}
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
+  const { text } = await req.json();
+  // const updated = await prisma.todo.update({ where: { id }, data: { text } });
+  return NextResponse.json({ ok: true, id, text });
+}
+```
