@@ -55,6 +55,17 @@ export default async function DashboardPage() {
   const contactCount = await prisma.contact.count();
   const ctcCount = [{ label: '連絡先', value: contactCount }];
 
+  // ✅🔵DBから商談数を取得。🔵
+  const dealCount = await prisma.deal.count();
+  const dlCount = [{ label: '商談', value: dealCount }];
+
+  const closedWonCount = await prisma.deal.count({
+    where: {
+      status: 'closed_won',
+    },
+  });
+  const wonCount = [{ label: '受注済み商談', value: closedWonCount }];
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold">ダッシュボード</h1>
@@ -80,6 +91,28 @@ export default async function DashboardPage() {
             {/* ✅conpanyCountを取得 */}
             <div className="mt-2 text-3xl font-semibold">
               連絡先数 : {s.value}
+            </div>
+          </div>
+        ))}
+
+        {dlCount.map((s) => (
+          <div key={s.label} className="rounded-lg border bg-white p-5">
+            {/* ✅label・会社を取得 */}
+            <div className="text-sm text-gray-600">{s.label}</div>
+            {/* ✅conpanyCountを取得 */}
+            <div className="mt-2 text-3xl font-semibold">
+              商談数 : {s.value}
+            </div>
+          </div>
+        ))}
+
+        {wonCount.map((s) => (
+          <div key={s.label} className="rounded-lg border bg-white p-5">
+            {/* ✅label・会社を取得 */}
+            <div className="text-sm text-gray-600">{s.label}</div>
+            {/* ✅conpanyCountを取得 */}
+            <div className="mt-2 text-3xl font-semibold">
+              受注した商談数 : {s.value}
             </div>
           </div>
         ))}
