@@ -34,7 +34,9 @@ export default async function EditContactPage({
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-semibold">連絡先を編集</h1>
+      <h1 className="text-xl font-semibold">
+        連絡先を編集: {contact.firstName} {contact.lastName}
+      </h1>
       <ContactsForm
         mode="edit"
         id={id}

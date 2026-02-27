@@ -80,7 +80,7 @@ export default function ContactsForm({
           value={v.companyId}
           onChange={(e) => setV({ ...v, companyId: e.target.value })}
         >
-          <option value="">選択してください</option>
+          <option value="">会社を選択</option>
           {companies.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}

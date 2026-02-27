@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import RowActions from './row-actions';
 
-export default async function ContactsPage() {
+export default async function DealsPage() {
   const store = await cookies();
   const uid = store.get('uid')?.value;
 
@@ -54,6 +54,7 @@ export default async function ContactsPage() {
               <th className="px-5 py-3 text-left">金額</th>
               <th className="px-5 py-3 text-left">ステータス</th>
               <th className="px-5 py-3 text-left">見込み制約日</th>
+              <th className="px-5 py-3 text-left">アクション</th>
               {/* title String amount Decimal? status DealStatus expectedClosingDate
               DateTime? // 要件は
               date。PrismaはDateTimeで扱うのが一般的（DB側はdateでもOK）
@@ -111,7 +112,7 @@ export default async function ContactsPage() {
                 {/* ✅　❻見込み制約日 */}
                 <td className="px-5 py-4">
                   {c.expectedClosingDate
-                    ? new Date(c.expectedClosingDate).toLocaleDateString()
+                    ? c.expectedClosingDate.toLocaleDateString()
                     : '-'}
                 </td>
 

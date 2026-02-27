@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 type Values = {
   companyId: string;
+  contactId: string;
   title: string;
   amount: string;
   status: string;
@@ -20,16 +21,18 @@ export default function DealsForm({
   id,
   initial,
   companies, //
-  deals,
+  contacts,
 }: {
   mode: 'create' | 'edit';
   id?: string;
   initial?: Partial<Values>;
-  companies: { id: string; name: string }[]; //✅
+  companies: { id: string; name: string }[];
+  contacts: { id: string; firstName: string; lastName: string }[]; //✅props contactsを追加🚨
 }) {
   const router = useRouter();
   const [v, setV] = useState<Values>({
-    companyid: initial?.companyId ?? '',
+    companyId: initial?.companyId ?? '',
+    contactId: initial?.contactId ?? '',
     title: initial?.title ?? '',
     amount: initial?.amount ?? '',
     status: initial?.status ?? '',
@@ -84,6 +87,7 @@ export default function DealsForm({
           <option value="">会社を選択</option>
           {companies.map((c) => (
             <option key={c.id} value={c.id}>
+              {/* ✅会社名取得なので、c.name */}
               {c.name}
             </option>
           ))}
@@ -103,7 +107,8 @@ export default function DealsForm({
           <option value="">連絡先を選択</option>
           {contacts.map((c) => (
             <option key={c.id} value={c.id}>
-              {c.name}
+              {/* ✅　連絡先取得なので、　firstName と、lastName取得。 */}
+              {c.firstName} {c.lastName}
             </option>
           ))}
         </select>
@@ -119,31 +124,59 @@ export default function DealsForm({
         value={v.amount}
         onChange={(x) => setV({ ...v, amount: x })}
       />
-      <Field
-        label="ステータス"
-        value={v.status}
-        onChange={(x) => setV({ ...v, status: x })}
-      />
-      <Field
-        label="見込み制約日"
-        value={v.expectedClosingDate}
-        onChange={(x) => setV({ ...v, expectedClosingDate: x })}
-      />
-       {/* ✅🆕 */}
-      <Field
-        label="確率"
-        value={v.expectedClosingDate}
-        onChange={(x) => setV({ ...v, expectedClosingDate: x })}
-      />
+      {/* ✅ ステータス　プルダウン式で選択 */}
+      {/* 🆕　select と、　option で。🤖 */}
+      <div>
+        <label className="block text-sm font-medium text-slate-700">
+          ステータス
+        </label>
+        <select
+          className="mt-2 w-full rounded-md border px-3 py-2"
+          value={v.status}
+          onChange={(e) => setV({ ...v, status: e.target.value })}
+        >
+          <option value="">選択</option>
+          <option value="prospecting">新規開拓</option>
+          <option value="quaification">ヒアリング</option>
+          <option value="needs_analysis">課題分析</option>
+          <option value="proposal">提案</option>
+          <option value="negotiation">交渉</option>
+          <option value="closed_won">受注</option>
+          <option value="closed_lost">失注</option>
+        </select>
+      </div>
 
-      /* ✅🆕 */}
+      {/* ✅　見込み制約日　日付選択肢式 */}
+      <div>
+        <label className="block text-sm font-medium text-slate-700">
+          見込み制約日
+        </label>
+        <input
+          className="mt-2 w-full rounded-md border px-3 py-2"
+          type="date"
+          value={v.expectedClosingDate}
+          onChange={(e) => setV({ ...v, expectedClosingDate: e.target.value })}
+        />
+      </div>
+
+      {/* ✅　確率部も数値に変換 */}
+      <div>
+        <label className="block text-sm font-medium text-slate-700">
+          確率.%
+        </label>
+        <input
+          className="mt-2 w-full rounded-md border px-3 py-2"
+          type="number"
+          value={v.probability}
+          onChange={(e) => setV({ ...v, probability: e.target.value })}
+        />
+      </div>
+
       <Field
         label="説明"
-        value={v.expectedClosingDate}
-        onChange={(x) => setV({ ...v, expectedClosingDate: x })}
+        value={v.description}
+        onChange={(x) => setV({ ...v, description: x })}
       />
-
-
 
       <Field
         label="備考"
@@ -155,7 +188,7 @@ export default function DealsForm({
       <div className="flex justify-end gap-3 pt-2">
         <button
           className="rounded-md border px-4 py-2 text-sm"
-          onClick={() => router.push('/contacts')}
+          onClick={() => router.push('/deals')}
         >
           キャンセル
         </button>

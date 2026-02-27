@@ -24,7 +24,7 @@ export default function RowActions({ id }: { id: string }) {
   return (
     <div className="flex gap-4">
       <Link
-        href={`/contacts/${id}/edit`}
+        href={`/deals/${id}/edit`}
         className="text-indigo-600 hover:underline"
       >
         編集
