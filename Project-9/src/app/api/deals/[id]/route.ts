@@ -8,10 +8,19 @@ import { Decimal } from '@prisma/client/runtime/client';
 
 function toDealJson(c: any) {
   return {
-    ...c,
     id: c.id.toString(),
     userId: c.userId.toString(),
     companyId: c.companyId.toString(),
+    contactId: c.contactId?.toString() ?? null,
+    title: c.title,
+    amount: c.amount ? c.amount.toString() : null,
+    status: c.status,
+    expectedClosingDate: c.expectedClosingDate
+      ? c.expectedClosingDate.toISOString()
+      : null,
+    probability: c.probability,
+    description: c.description,
+    note: c.note,
     createdAt: c.createdAt.toISOString(),
     updatedAt: c.updatedAt.toISOString(),
   };
@@ -74,18 +83,22 @@ export async function PUT(
         : undefined,
       title: body.title?.trim() ?? '', //🆗
       // Decimalは、　Number(), か、 new Prisma.Decimal()　に変換　🆗
-      amount: body.amount ? new Prisma.Decimal(body.amount) : null,
+      amount:
+        body.amount && body.amount.trim() !== ''
+          ? new Prisma.Decimal(body.amount)
+          : null,
       status: body.status as any, //enum 🆗
-      expectedClosingDate: body.expectedClosingDate
-        ? new Date(body.expectedClosingDate)
-        : null,
+      expectedClosingDate:
+        body.expectedClosingDate && body.expectedClosingDate.trim() !== ''
+          ? new Date(body.expectedClosingDate)
+          : null,
       probability: body.probability ? Number(body.probability) : null,
       description: body.description?.trim() || null,
       note: body.note?.trim() || null,
     },
   });
 
-  return NextResponse.json({ contact: toDealJson(deal) }, { status: 200 });
+  return NextResponse.json({ deal: toDealJson(deal) }, { status: 200 });
 }
 
 // 🔵DELETE /api/deals/:id🔵
