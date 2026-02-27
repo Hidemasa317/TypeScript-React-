@@ -52,7 +52,7 @@ export default function CompanyForm({
     const text = await res.text();
     console.log('response text:', text);
 
-    if (!res.ok) {
+    if (!res.ok)  {
       alert(`失敗: ${res.status}`);
       return;
     }
