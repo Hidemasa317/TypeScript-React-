@@ -3,17 +3,6 @@ import Link from 'next/link';
 import { cookies } from 'next/headers';
 // ✅🤖URL毎のページ本体、描画を担う片割れ。会社ページ・連絡先ページ等を探しに行く。
 
-//✅🤖最近の活動　部
-const activities = [
-  {
-    title: '電話営業',
-    type: '電話',
-    related: 'アリが10宅急.inc',
-    ago: '4ヶ月前',
-  },
-  { title: 'AAA', type: '電話', related: 'アリが10宅急.inc', ago: '4ヶ月前' },
-];
-
 // function StatusPill({ text }: { text: string }) {
 //   return (
 //     <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
@@ -69,6 +58,25 @@ export default async function DashboardPage() {
     negotiation: '交渉',
     closed_won: '受注',
     closed_lost: '失注',
+  };
+
+  //✅🤖最近の活動　部
+  const activities = await prisma.activity.findMany({
+    where: { userId },
+    include: {
+      company: true,
+      contact: true,
+      deal: true,
+    },
+    orderBy: { scheduledAt: 'desc' },
+  });
+
+  const typeLabel: Record<string, string> = {
+    tel: '電話',
+    mail: 'メール',
+    meeting: '会議',
+    task: 'タスク',
+    memo: 'メモ',
   };
 
   return (
@@ -198,15 +206,15 @@ export default async function DashboardPage() {
                 </tr>
               ))}
             </tbody>
-            <div className="flex items-center justify-between border-b px-5 py-4">
-              <Link
-                href="/deals/new"
-                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
-              >
-                新規商談
-              </Link>
-            </div>
           </table>
+          <div className="flex items-center justify-between border-b px-5 py-4">
+            <Link
+              href="/deals/new"
+              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
+            >
+              新規商談
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -224,28 +232,41 @@ export default async function DashboardPage() {
           </p>
         </section>
 
-        <section className="rounded-lg border bg-white p-5">
-          <h2 className="text-sm font-semibold">最近の活動</h2>
-          <div className="mt-4 space-y-4">
-            {activities.map((a, i) => (
-              <div key={i} className="flex gap-4">
-                <div className="mt-1 h-12 w-1 rounded bg-gray-200" />
-                <div className="flex-1">
-                  <div className="flex items-start justify-between">
-                    <div className="font-semibold">{a.title}</div>
-                    <div className="text-xs text-gray-500">{a.ago}</div>
-                  </div>
-                  <div className="mt-1 text-sm text-gray-600">
-                    タイプ：{a.type}
-                  </div>
-                  <div className="text-sm text-indigo-600">
-                    関連：{a.related}
+        <div className="grid gap-6 lg:grid-cols-2">
+          <section className="rounded-lg border bg-white p-5">
+            <h2 className="text-sm font-semibold">最近の活動</h2>
+
+            <div className="mt-4 space-y-4">
+              {activities.map((a, i) => (
+                <div key={i} className="flex gap-4">
+                  <div className="mt-1 w-1 rounded bg-indigo-500" />
+
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <div className="font-semibold">{a.title}</div>
+                    </div>
+
+                    <div className="text-sm text-gray-700">
+                      タイプ：{typeLabel[a.type] ?? a.type}
+                    </div>
+
+                    {a.company && (
+                      <div className="text-sm">
+                        関連：
+                        <Link
+                          href={`/companies/${a.companyId}`}
+                          className="text-indigo-600 hover:underline"
+                        >
+                          {a.company.name}
+                        </Link>
+                      </div>
+                    )}
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   );
