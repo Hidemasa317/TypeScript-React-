@@ -218,7 +218,7 @@ export default async function DashboardPage() {
         </div>
       </section>
 
-      {/* 下2カラム */}
+      {/* ✅活動の2カード表示部　🤖 */}
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="rounded-lg border bg-white p-5">
           <div className="flex items-center justify-between">
