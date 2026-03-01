@@ -137,7 +137,7 @@ export default function DealsForm({
         >
           <option value="">選択</option>
           <option value="prospecting">新規開拓</option>
-          <option value="qualfication">ヒアリング</option>
+          <option value="qualification">ヒアリング</option>
           <option value="needs_analysis">課題分析</option>
           <option value="proposal">提案</option>
           <option value="negotiation">交渉</option>

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 export default function RowActions({ id }: { id: string }) {
   const router = useRouter();
 
-  async function onDelete() {
+  async function ondealDelete() {
     if (!confirm('本当に削除しますか？')) return;
 
     const res = await fetch(`/api/deals/${id}`, {
@@ -30,7 +30,7 @@ export default function RowActions({ id }: { id: string }) {
         編集
       </Link>
 
-      <button onClick={onDelete} className="text-red-600 hover:underline">
+      <button onClick={ondealDelete} className="text-red-600 hover:underline">
         削除
       </button>
     </div>

@@ -1,30 +1,7 @@
 import { prisma } from '@/lib/prisma';
+import Link from 'next/link';
+import { cookies } from 'next/headers';
 // ✅🤖URL毎のページ本体、描画を担う片割れ。会社ページ・連絡先ページ等を探しに行く。
-
-//✅🤖進行中の商談　部
-const deals = [
-  {
-    title: 'タイトル',
-    company: '九州メディカルケア株式会社',
-    amount: '300',
-    status: '見込み客発掘',
-    close: '-',
-  },
-  {
-    title: 'リスト分析自動化',
-    company: 'アリが10宅急.inc',
-    amount: '3,500,000',
-    status: '見込み客発掘',
-    close: '2025-12-31',
-  },
-  {
-    title: 'クラウドAIソリューション導入案件',
-    company: '株式会社テクノソリューション',
-    amount: '5,000,000',
-    status: '提案',
-    close: '2025-10-25',
-  },
-];
 
 //✅🤖最近の活動　部
 const activities = [
@@ -37,13 +14,13 @@ const activities = [
   { title: 'AAA', type: '電話', related: 'アリが10宅急.inc', ago: '4ヶ月前' },
 ];
 
-function StatusPill({ text }: { text: string }) {
-  return (
-    <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
-      {text}
-    </span>
-  );
-}
+// function StatusPill({ text }: { text: string }) {
+//   return (
+//     <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
+//       {text}
+//     </span>
+//   );
+// }
 
 // ✅関数　DashboardPage部
 
@@ -65,6 +42,34 @@ export default async function DashboardPage() {
     },
   });
   const wonCount = [{ label: '受注済み商談', value: closedWonCount }];
+
+  // 🟠商談カード　部
+  const store = await cookies();
+  const uid = store.get('uid')?.value;
+
+  if (!uid) {
+    return <div>"ログインしてください。"</div>;
+  }
+
+  const userId = BigInt(uid);
+
+  // ✅prismaで　dealテーブルから取得し、格納。
+  const deals = await prisma.deal.findMany({
+    where: { userId },
+    include: { company: true, contact: true }, //✅🚨
+    orderBy: { createdAt: 'desc' },
+  });
+
+  // ✅status プルダウン設定部
+  const statusLabels: Record<string, string> = {
+    prospecting: '新規開拓',
+    qualification: 'ヒアリング',
+    needs_analysis: '課題分析',
+    proposal: '提案',
+    negotiation: '交渉',
+    closed_won: '受注',
+    closed_lost: '失注',
+  };
 
   return (
     <div className="space-y-6">
@@ -118,43 +123,89 @@ export default async function DashboardPage() {
         ))}
       </div>
 
-      {/* ✅🤖　進行中の商談部 */}
+      {/* ✅🤖　🆕　進行中の商談部 */}
       <section className="rounded-lg border bg-white">
         <div className="flex items-center justify-between border-b px-5 py-4">
-          <h2 className="text-sm font-semibold">進行中の商談</h2>
-          <button className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700">
-            新規商談
-          </button>
+          <h1 className="text-sm font-semibold">進行中の商談</h1>
         </div>
 
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm">
-            <thead className="bg-gray-50 text-gray-600">
+            <thead className="bg-gray-50 text-gray-800">
               <tr>
-                <th className="px-5 py-3 text-left font-medium">タイトル</th>
-                <th className="px-5 py-3 text-left font-medium">会社</th>
-                <th className="px-5 py-3 text-left font-medium">金額</th>
-                <th className="px-5 py-3 text-left font-medium">ステータス</th>
-                <th className="px-5 py-3 text-left font-medium">
-                  見込み成約日
-                </th>
+                <th className="px-5 py-3 text-left">タイトル</th>
+                <th className="px-5 py-3 text-left">会社</th>
+                <th className="px-5 py-3 text-left">連絡先</th>
+                <th className="px-5 py-3 text-left">金額</th>
+                <th className="px-5 py-3 text-left">ステータス</th>
+                <th className="px-5 py-3 text-left">見込み制約日</th>
               </tr>
             </thead>
             <tbody className="divide-y">
-              {deals.map((d, i) => (
-                <tr key={i} className="bg-white">
-                  <td className="px-5 py-4 font-medium text-indigo-600">
-                    {d.title}
-                  </td>
-                  <td className="px-5 py-4 text-indigo-600">{d.company}</td>
-                  <td className="px-5 py-4">{d.amount}</td>
+              {/* ✅map で、格納された定数から取り出す。 */}
+              {deals.map((c) => (
+                <tr key={String(c.id)}>
+                  {/* ✅　❶タイトル　*/}
                   <td className="px-5 py-4">
-                    <StatusPill text={d.status} />
+                    <Link
+                      href={`/deals/${c.id}`}
+                      className="text-indigo-600 hover:underline"
+                    >
+                      {c.title}
+                    </Link>
                   </td>
-                  <td className="px-5 py-4">{d.close}</td>
+                  {/* ✅　❷会社　*/}
+                  <td className="px-5 py-4">
+                    {c.company ? (
+                      <Link
+                        href={`/companies/${c.companyId}`}
+                        className="text-indigo-600 hover:underline"
+                      >
+                        {c.company.name}
+                      </Link>
+                    ) : (
+                      '-'
+                    )}
+                  </td>
+                  {/* ✅ ❸連絡先 リンク必要🚨　*/}
+                  <td className="px-5 py-4">
+                    {c.contact ? (
+                      <Link
+                        href={`/contacts/${c.contactId}`}
+                        className="text-indigo-600 hover:underline"
+                      >
+                        {c.contact.firstName} {c.contact.lastName}
+                      </Link>
+                    ) : (
+                      '-'
+                    )}
+                  </td>
+                  {/* ✅　❹金額 リンクは必要ない。 */}
+                  <td className="px-5 py-4">
+                    {c.amount ? Number(c.amount).toLocaleString() : '-'}
+                  </td>
+                  {/* ✅　❺スタータス　プルダウン式の新要素　🔵 */}
+                  <td className="px-5 py-4">
+                    {statusLabels[c.status] ?? c.status}
+                  </td>
+
+                  {/* ✅　❻見込み制約日 */}
+                  <td className="px-5 py-4">
+                    {c.expectedClosingDate
+                      ? c.expectedClosingDate.toLocaleDateString()
+                      : '-'}
+                  </td>
                 </tr>
               ))}
             </tbody>
+            <div className="flex items-center justify-between border-b px-5 py-4">
+              <Link
+                href="/deals/new"
+                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
+              >
+                新規商談
+              </Link>
+            </div>
           </table>
         </div>
       </section>
