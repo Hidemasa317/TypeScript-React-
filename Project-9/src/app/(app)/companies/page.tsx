@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
-import RowActions from './row-actions';
+import RowCmpActions from './row-actions';
 
 export default async function CompaniesPage() {
   const store = await cookies();
@@ -76,7 +76,7 @@ export default async function CompaniesPage() {
                 </td>
                 <td className="px-5 py-4">
                   {/* ✅🤖アクション 編集削除 部位 */}
-                  <RowActions id={String(c.id)} />
+                  <RowCmpActions id={String(c.id)} />
                 </td>
               </tr>
             ))}

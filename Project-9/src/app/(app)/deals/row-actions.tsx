@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export default function RowActions({ id }: { id: string }) {
+export default function RowDealActions({ id }: { id: string }) {
   const router = useRouter();
 
   async function ondealDelete() {

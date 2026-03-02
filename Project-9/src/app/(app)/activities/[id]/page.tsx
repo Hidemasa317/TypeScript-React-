@@ -7,11 +7,11 @@ import DeleteButton from './delete-button';
 //---✅活動詳細ページ---
 
 type Props = {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 };
 
 export default async function ActivityDetailPage({ params }: Props) {
-  const { id } = await params;
+  const { id } = params;
   const store = await cookies();
   const uid = store.get('uid')?.value;
 

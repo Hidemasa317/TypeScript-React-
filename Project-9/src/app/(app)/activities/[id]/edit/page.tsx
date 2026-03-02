@@ -13,7 +13,6 @@ export default async function EditActivityPage({
   if (!id) {
     return <div className="p-6">Invalid ID</div>;
   }
-
   const store = await cookies();
   const uid = store.get('uid')?.value;
   if (!uid) return <div className="p-6">ログインしてください</div>;
@@ -67,17 +66,21 @@ export default async function EditActivityPage({
           title: d.title,
         }))}
         initial={{
-          companyId: deal.companyId.toString(),
-          contactId: deal.contactId?.toString() ?? '',
-          title: deal.title ?? '',
-          amount: deal.amount ? deal.amount.toString() : '',
-          status: deal.status ?? '',
-          expectedClosingDate: deal.expectedClosingDate
-            ? deal.expectedClosingDate.toISOString().split('T')[0]
+          companyId: activity.companyId?.toString() ?? '',
+          contactId: activity.contactId?.toString() ?? '',
+          dealId: activity.dealId?.toString() ?? '',
+
+          type: activity.type,
+          title: activity.title ?? '',
+          description: activity.description ?? '',
+          scheduledAt: activity.scheduledAt
+            ? activity.scheduledAt.toISOString().slice(0, 10)
             : '',
-          probability: deal.probability?.toString() ?? '',
-          description: deal.description ?? '',
-          note: deal.note ?? '',
+          completedAt: activity.completedAt
+            ? activity.completedAt.toISOString().slice(0, 10)
+            : '',
+          status: activity.status,
+          outcome: activity.outcome ?? '',
         }}
       />
     </div>

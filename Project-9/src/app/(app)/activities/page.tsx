@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
+import RowActivityActions from './row-actions';
 
 export default async function ActivitiesPage() {
   const store = await cookies();
@@ -124,18 +125,8 @@ export default async function ActivitiesPage() {
                 )}
 
                 <div className="flex gap-4 text-sm mt-2">
-                  <Link
-                    href={`/activities/${a.id}/edit`}
-                    className="text-indigo-600 hover:underline"
-                  >
-                    編集
-                  </Link>
-                  <Link
-                    href={`/activities/${a.id}/delete`}
-                    className="text-red-600 hover:underline"
-                  >
-                    削除
-                  </Link>
+                  {/* ✅🤖　アクション 編集削除 部位 */}
+                  <RowActivityActions id={String(a.id)} />
                 </div>
               </div>
             </div>

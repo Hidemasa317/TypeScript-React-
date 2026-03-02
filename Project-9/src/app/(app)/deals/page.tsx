@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
-import RowActions from './row-actions';
+import RowDealActions from './row-actions';
 
 export default async function DealsPage() {
   const store = await cookies();
@@ -118,7 +118,7 @@ export default async function DealsPage() {
 
                 <td className="px-5 py-4">
                   {/* ✅🤖　❻アクション 編集削除 部位 */}
-                  <RowActions id={String(c.id)} />
+                  <RowDealActions id={String(c.id)} />
                 </td>
               </tr>
             ))}

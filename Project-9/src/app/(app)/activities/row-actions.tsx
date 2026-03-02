@@ -3,10 +3,10 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export default function RowActions({ id }: { id: string }) {
+export default function RowActivityActions({ id }: { id: string }) {
   const router = useRouter();
 
-  async function onactivityDelete() {
+  async function onActivityDelete() {
     if (!confirm('本当に削除しますか？')) return;
 
     const res = await fetch(`/api/activities/${id}`, {
@@ -31,7 +31,7 @@ export default function RowActions({ id }: { id: string }) {
       </Link>
 
       <button
-        onClick={onactivityDelete}
+        onClick={onActivityDelete}
         className="text-red-600 hover:underline"
       >
         削除

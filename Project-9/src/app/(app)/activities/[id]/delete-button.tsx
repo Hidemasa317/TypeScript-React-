@@ -19,6 +19,7 @@ export default function DeleteButton({ id }: { id: string }) {
     }
 
     router.push('/activities');
+    router.refresh(); // 一覧再取得
   }
 
   return (
