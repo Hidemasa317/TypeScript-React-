@@ -143,7 +143,6 @@ export default async function DashboardPage() {
               <tr>
                 <th className="px-5 py-3 text-left">タイトル</th>
                 <th className="px-5 py-3 text-left">会社</th>
-                <th className="px-5 py-3 text-left">連絡先</th>
                 <th className="px-5 py-3 text-left">金額</th>
                 <th className="px-5 py-3 text-left">ステータス</th>
                 <th className="px-5 py-3 text-left">見込み制約日</th>
@@ -175,19 +174,7 @@ export default async function DashboardPage() {
                       '-'
                     )}
                   </td>
-                  {/* ✅ ❸連絡先 リンク必要🚨　*/}
-                  <td className="px-5 py-4">
-                    {c.contact ? (
-                      <Link
-                        href={`/contacts/${c.contactId}`}
-                        className="text-indigo-600 hover:underline"
-                      >
-                        {c.contact.firstName} {c.contact.lastName}
-                      </Link>
-                    ) : (
-                      '-'
-                    )}
-                  </td>
+
                   {/* ✅　❹金額 リンクは必要ない。 */}
                   <td className="px-5 py-4">
                     {c.amount ? Number(c.amount).toLocaleString() : '-'}
