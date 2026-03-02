@@ -111,6 +111,12 @@ export default async function ActivitiesPage() {
                   </div>
                 )}
 
+                {/* 予定日時追加 */}
+                {a.scheduledAt && (
+                  <div className="text-sm text-gray-600 mt-2">
+                    予定日時: {a.scheduledAt.toLocaleString()}
+                  </div>
+                )}
                 {a.description && (
                   <div className="text-sm text-gray-600 mt-2">
                     {a.description}

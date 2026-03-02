@@ -10,7 +10,7 @@ type Props = {
   params: Promise<{ id: string }>;
 };
 
-export default async function DealDeDealPage({ params }: Props) {
+export default async function DealDetailPage({ params }: Props) {
   const { id } = await params;
   const store = await cookies();
   const uid = store.get('uid')?.value;
