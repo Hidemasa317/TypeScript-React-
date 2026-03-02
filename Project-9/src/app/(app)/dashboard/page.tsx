@@ -91,9 +91,7 @@ export default async function DashboardPage() {
             {/* ✅label・会社を取得 */}
             <div className="text-sm text-gray-600">{s.label}</div>
             {/* ✅conpanyCountを取得 */}
-            <div className="mt-2 text-3xl font-semibold">
-              登録社数 : {s.value}
-            </div>
+            <div className="mt-2 text-3xl font-semibold">{s.value}</div>
           </div>
         ))}
 
@@ -102,9 +100,7 @@ export default async function DashboardPage() {
             {/* ✅label・会社を取得 */}
             <div className="text-sm text-gray-600">{s.label}</div>
             {/* ✅conpanyCountを取得 */}
-            <div className="mt-2 text-3xl font-semibold">
-              連絡先数 : {s.value}
-            </div>
+            <div className="mt-2 text-3xl font-semibold">{s.value}</div>
           </div>
         ))}
 
@@ -113,9 +109,7 @@ export default async function DashboardPage() {
             {/* ✅label・会社を取得 */}
             <div className="text-sm text-gray-600">{s.label}</div>
             {/* ✅conpanyCountを取得 */}
-            <div className="mt-2 text-3xl font-semibold">
-              商談数 : {s.value}
-            </div>
+            <div className="mt-2 text-3xl font-semibold">{s.value}</div>
           </div>
         ))}
 
@@ -124,9 +118,7 @@ export default async function DashboardPage() {
             {/* ✅label・会社を取得 */}
             <div className="text-sm text-gray-600">{s.label}</div>
             {/* ✅conpanyCountを取得 */}
-            <div className="mt-2 text-3xl font-semibold">
-              受注した商談数 : {s.value}
-            </div>
+            <div className="mt-2 text-3xl font-semibold">{s.value}</div>
           </div>
         ))}
       </div>
