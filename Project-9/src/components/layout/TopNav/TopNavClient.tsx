@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 
 const tabs = [
   { href: '/dashboard', label: 'ダッシュボード' },
@@ -11,16 +12,26 @@ const tabs = [
   { href: '/activities', label: '活動' },
 ];
 
-export default function TopNav() {
+type User = {
+  name: string | null;
+  role: string | null;
+} | null;
+
+export default function TopNavClient({ user }: { user: User }) {
   const pathname = usePathname();
+
+  const [open, setOpen] = useState(false);
 
   return (
     <header className="border-b bg-white">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <div className="flex items-center gap-4">
-          <div className="grid h-8 w-8 place-items-center rounded-md bg-gray-100 text-sm font-bold">
+          <Link
+            href="/dashboard"
+            className="grid h-8 w-8 place-items-center rounded-md bg-gray-100 text-sm font-bold"
+          >
             CRM
-          </div>
+          </Link>
 
           <nav className="flex items-center gap-6 text-sm">
             {tabs.map((t) => {
@@ -44,13 +55,36 @@ export default function TopNav() {
           </nav>
         </div>
 
-        {/* 右上（ログイン未実装なので仮置き） */}
+        {/* ✅プロフィール欄表示部　🤖 */}
+        <div className="relative"></div>
         <button
-          type="button"
-          className="rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
+          onClick={() => setOpen(!open)}
+          className="rounded-md px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100"
         >
-          Admin User ▾
+          {user ? user.name : 'Guest'}▼
         </button>
+
+        {open && (
+          <div className="absolute right-0 mt-2 w-40 rounded-md border bg-white shadow-md">
+            <Link
+              href="/profile"
+              className="block px-4 py-2 text-sm hover:bg-gray-100"
+              onClick={() => setOpen(false)}
+            >
+              プロフィール
+            </Link>
+
+            <button
+              className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+              onClick={() => {
+                setOpen(false);
+                window.location.href = '/api/auth/logout';
+              }}
+            >
+              ログアウト
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );

@@ -30,6 +30,8 @@ export default async function DashboardPage() {
       status: 'closed_won',
     },
   });
+
+  // ✅🔵受注済み商談のみに絞って抽出。🔵
   const wonCount = [{ label: '受注済み商談', value: closedWonCount }];
 
   // 🟠商談カード　部
