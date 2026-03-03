@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import TopNavClient from './TopNavClient';
@@ -7,13 +8,13 @@ export default async function TopNav() {
   const uid = store.get('uid')?.value;
 
   if (!uid) {
-    return <TopNavClient user={null} />;
+    return <TopNavClient userNow={null} />;
   }
 
-  const user = await prisma.user.findUnique({
+  const userNow = await prisma.user.findUnique({
     where: { id: BigInt(uid) },
     select: { name: true, role: true },
   });
 
-  return <TopNavClient user={user} />;
+  return <TopNavClient userNow={userNow} />;
 }

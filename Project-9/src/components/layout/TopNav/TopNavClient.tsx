@@ -17,7 +17,7 @@ type User = {
   role: string | null;
 } | null;
 
-export default function TopNavClient({ user }: { user: User }) {
+export default function TopNavClient({ userNow }: { userNow: User }) {
   const pathname = usePathname();
 
   const [open, setOpen] = useState(false);
@@ -56,35 +56,39 @@ export default function TopNavClient({ user }: { user: User }) {
         </div>
 
         {/* ✅プロフィール欄表示部　🤖 */}
-        <div className="relative"></div>
-        <button
-          onClick={() => setOpen(!open)}
-          className="rounded-md px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100"
-        >
-          {user ? user.name : 'Guest'}▼
-        </button>
+        <div className="relative">
+          <button
+            onClick={() => setOpen(!open)}
+            className="rounded-md px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100"
+          >
+            {/* ✅三項演算子　trueの際に、userNow.nameを返す。 */}
+            {userNow ? userNow.name : 'Guest'} 🔽
+          </button>
 
-        {open && (
-          <div className="absolute right-0 mt-2 w-40 rounded-md border bg-white shadow-md">
-            <Link
-              href="/profile"
-              className="block px-4 py-2 text-sm hover:bg-gray-100"
-              onClick={() => setOpen(false)}
-            >
-              プロフィール
-            </Link>
+          {/* ✅　openがtrueのときに表示されるメニュー */}
+          {open && (
+            <div className="absolute right-0 top-full mt-2 w-40 rounded-md border bg-white shadow-md">
+              <Link
+                href="/profile"
+                className="block px-4 py-2 text-sm hover:bg-gray-100"
+                onClick={() => setOpen(false)}
+              >
+                プロフィール
+              </Link>
 
-            <button
-              className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-              onClick={() => {
-                setOpen(false);
-                window.location.href = '/api/auth/logout';
-              }}
-            >
-              ログアウト
-            </button>
-          </div>
-        )}
+              <Link
+                href="/app/(auth)/register"
+                className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                onClick={() => {
+                  setOpen(false);
+                  // window.location.href = '/api/auth/logout';
+                }}
+              >
+                ログアウト
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );
