@@ -1,15 +1,28 @@
-'use client' ;
+'use client';
 
-import {useState} from 'react';
+import { useState } from 'react';
 
 type Props = {
-  onClose: ()=> void; 
-}
+  onClose: () => void;
+};
 
-export default function DeleteAccountModal (){
+export default function DeleteAccountModal({ onClose }: Props) {
+  const [password, setPassword] = useState('');
 
-  const [password, setPassword] = usestate('');
+  async function onDelete() {
+    const res = await fetch('/api/profile', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    });
 
+    if (!res.ok) {
+      alert('削除に失敗しました');
+      return;
+    }
+    // 成功でログイン画面へ。
+    window.location.href = '/login';
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -39,18 +52,13 @@ export default function DeleteAccountModal (){
           </button>
 
           <button
+            onClick={onDelete}
             className="rounded-md bg-red-600 px-4 py-2 text-sm text-white"
           >
             DELETE ACCOUNT
           </button>
         </div>
       </div>
-    
+    </div>
   );
-
-
-
-
-
-
 }

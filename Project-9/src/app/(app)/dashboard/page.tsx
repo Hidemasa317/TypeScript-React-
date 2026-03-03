@@ -14,20 +14,28 @@ import { cookies } from 'next/headers';
 // ✅関数　DashboardPage部
 
 export default async function DashboardPage() {
+  const store = await cookies();
+  const uid = store.get('uid')?.value;
+
+  if (!uid) {
+    return <div>"ログインしてください。"</div>;
+  }
+  const userId = BigInt(uid);
   // ✅🔵DBから会社数を取得。🔵
-  const companyCount = await prisma.company.count();
+  const companyCount = await prisma.company.count({ where: { userId } });
   const cmpcount = [{ label: '会社', value: companyCount }];
   // ✅🔵DBから連絡先数を取得。🔵
-  const contactCount = await prisma.contact.count();
+  const contactCount = await prisma.contact.count({ where: { userId } });
   const ctcCount = [{ label: '連絡先', value: contactCount }];
 
   // ✅🔵DBから商談数を取得。🔵
-  const dealCount = await prisma.deal.count();
+  const dealCount = await prisma.deal.count({ where: { userId } });
   const dlCount = [{ label: '商談', value: dealCount }];
 
   const closedWonCount = await prisma.deal.count({
     where: {
       status: 'closed_won',
+      userId,
     },
   });
 
@@ -35,14 +43,8 @@ export default async function DashboardPage() {
   const wonCount = [{ label: '受注済み商談', value: closedWonCount }];
 
   // 🟠商談カード　部
-  const store = await cookies();
-  const uid = store.get('uid')?.value;
 
-  if (!uid) {
-    return <div>"ログインしてください。"</div>;
-  }
-
-  const userId = BigInt(uid);
+  // const userId = BigInt(uid);
 
   // ✅prismaで　dealテーブルから取得し、格納。
   const deals = await prisma.deal.findMany({

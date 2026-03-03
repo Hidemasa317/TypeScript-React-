@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 
+// 🔵PUT📦
 export async function PUT(req: Request) {
   const store = await cookies();
   const uid = store.get('uid')?.value;
@@ -63,4 +64,49 @@ export async function PUT(req: Request) {
   }
 
   return NextResponse.json({ ok: true });
+}
+
+// 🔵DELETE📦
+export async function DELETE(req: Request) {
+  const store = await cookies();
+  const uid = store.get('uid')?.value;
+
+  if (!uid) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
+  const { password } = await req.json();
+
+  if (!password) {
+    return NextResponse.json(
+      { message: 'Password is required' },
+      { status: 400 },
+    );
+  }
+
+  // 📦ユーザ取得
+  const user = await prisma.user.findUnique({
+    where: { id: BigInt(uid) },
+    select: { passwordHash: true },
+  });
+
+  if (!user) {
+    return NextResponse.json({ message: 'User not found' }, { status: 404 });
+  }
+
+  const ok = await bcrypt.compare(password, user.passwordHash);
+  if (!ok) {
+    return NextResponse.json(
+      { message: 'Incorrect password' },
+      { status: 401 },
+    );
+  }
+
+  // 📦ユーザ削除
+  await prisma.user.delete({
+    where: { id: BigInt(uid) },
+  });
+
+  // 📦クッキー削除
+  const res = NextResponse.json({ ok: true });
+  res.cookies.set('uid', '', { maxAge: 0, path: '/' });
 }

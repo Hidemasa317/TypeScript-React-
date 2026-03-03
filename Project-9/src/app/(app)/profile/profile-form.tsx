@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import DeleteAccountModal from '@/components/modal/DeleteAccountModal';
 
 type User = {
   name: string | null;
@@ -54,7 +55,8 @@ export default function ProfileForm({ user }: { user: User }) {
     setConfirmPassword('');
   }
 
-  // 
+  // 📦アカウント削除
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   return (
     <div className="space-y-8">
@@ -164,7 +166,7 @@ export default function ProfileForm({ user }: { user: User }) {
       {/* ✅🤖　role表示部　 */}
       <div className="text-sm text-gray-500">Role: {user.role}</div>
 
-      {/* Delete Account */}
+      {/* 📦Delete Account */}
       <section className="rounded-lg border bg-white p-6 space-y-6">
         <div>
           <h2 className="text-lg font-semibold">Delete Account</h2>
@@ -175,9 +177,16 @@ export default function ProfileForm({ user }: { user: User }) {
           </p>
         </div>
 
-        <button className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white">
+        <button
+          onClick={(e) => setShowDeleteModal(true)}
+          className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white"
+        >
           DELETE ACCOUNT
         </button>
+
+        {showDeleteModal && (
+          <DeleteAccountModal onClose={() => setShowDeleteModal(false)} />
+        )}
       </section>
     </div>
   );
