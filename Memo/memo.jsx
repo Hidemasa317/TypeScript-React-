@@ -123,3 +123,30 @@ export default function Todo() {
     '-'
   )}
 </td>;
+'use client';
+
+import Link from 'next/link';
+import { useState } from 'react';
+
+export default function ForgotPage() {
+
+  const [email,setEmail] = useState("");
+
+  async function submit(){
+
+    await fetch("/api/auth/forgot-password",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json"},
+      body: JSON.stringify({email})
+    });
+
+    alert("パスワードリセットメールを送信しました");
+  }
+
+
+
+          
+
+           
+
+        

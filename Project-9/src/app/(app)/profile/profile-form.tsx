@@ -164,7 +164,9 @@ export default function ProfileForm({ user }: { user: User }) {
       </section>
 
       {/* ✅🤖　role表示部　 */}
-      <div className="text-sm text-gray-500">Role: {user.role}</div>
+      <div className="text-sm text-gray-500">
+        あなたの権限 Role: {user.role}
+      </div>
 
       {/* 📦Delete Account */}
       <section className="rounded-lg border bg-white p-6 space-y-6">

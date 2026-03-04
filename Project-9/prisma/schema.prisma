@@ -12,6 +12,10 @@ model User {
   email        String   @unique
   passwordHash String
   role         String   @default("sales_person")
+
+  resetToken     String?
+  resetTokenExp  DateTime?
+
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
