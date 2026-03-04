@@ -15,8 +15,14 @@ export default async function CompaniesPage() {
 
   // ✅prismaで　companyテーブルから取得し、格納。
   const companies = await prisma.company.findMany({
-    where: { userId },
+    // where: { userId },
     orderBy: { createdAt: 'desc' },
+  });
+
+  // 🔴Adminユーザ権限設定🔴
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
   });
 
   return (
@@ -24,12 +30,15 @@ export default async function CompaniesPage() {
       <div className="flex items-center justify-between border-b px-5 py-4">
         <h1 className="text-sm font-semibold">会社</h1>
         {/* Linkはサーバコンポーネントで使用できる。 */}
-        <Link
-          href="/companies/new"
-          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
-        >
-          会社を追加
-        </Link>
+
+        {user?.role === 'admin' && (
+          <Link
+            href="/companies/new"
+            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
+          >
+            会社を追加
+          </Link>
+        )}
       </div>
 
       <div className="overflow-x-auto">
@@ -76,7 +85,9 @@ export default async function CompaniesPage() {
                 </td>
                 <td className="px-5 py-4">
                   {/* ✅🤖アクション 編集削除 部位 */}
-                  <RowCmpActions id={String(c.id)} />
+                  {user?.role === 'admin' && (
+                    <RowCmpActions id={String(c.id)} />
+                  )}
                 </td>
               </tr>
             ))}

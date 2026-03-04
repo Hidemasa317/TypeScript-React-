@@ -30,6 +30,17 @@ export async function PUT(
   if (!userId)
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 
+  // 📦API制限部
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+  if (user?.role !== 'admin') {
+    return NextResponse.json(
+      { message: '権限がありません。' },
+      { status: 403 },
+    );
+  }
+
   const id = BigInt(idParam);
 
   const body = (await req.json()) as {
@@ -79,6 +90,17 @@ export async function DELETE(
   const userId = await getUserId();
   if (!userId)
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+
+  // 📦API制限部
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+  if (user?.role !== 'admin') {
+    return NextResponse.json(
+      { message: '権限がありません。' },
+      { status: 403 },
+    );
+  }
 
   const id = BigInt(idParam);
 

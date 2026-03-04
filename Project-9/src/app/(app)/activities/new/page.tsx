@@ -11,7 +11,7 @@ export default async function NewActivityPage() {
   const userId = BigInt(uid);
 
   const companies = await prisma.company.findMany({
-    where: { userId },
+    // where: { userId },
     orderBy: { createdAt: 'desc' },
   });
 

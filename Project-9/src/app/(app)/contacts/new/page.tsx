@@ -11,8 +11,8 @@ export default async function NewContactPage() {
   const userId = BigInt(uid);
 
   const companies = await prisma.company.findMany({
-    where: { userId },
-    orderBy: { createdAt: 'desc' },
+    // where: { userId },
+    orderBy: { createdAt: 'asc' },
   });
 
   return (

@@ -38,9 +38,22 @@ export async function GET() {
 
 // POST /api/companies
 export async function POST(req: Request) {
+  
+
   const userId = await getUserId();
   if (!userId)
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+
+  // 📦API制限部
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+  if (user?.role !== 'admin') {
+    return NextResponse.json(
+      { message: '権限がありません。' },
+      { status: 403 },
+    );
+  }
 
   const body = (await req.json()) as {
     name?: string;

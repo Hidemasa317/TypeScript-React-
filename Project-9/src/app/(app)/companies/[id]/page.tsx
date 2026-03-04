@@ -23,7 +23,8 @@ export default async function CompanyDetailPage({ params }: Props) {
   const companyId = BigInt(id);
 
   const company = await prisma.company.findFirst({
-    where: { id: companyId, userId },
+    where: { id: companyId },
+    // userIdでの制限は外した。
   });
 
   if (!company) {

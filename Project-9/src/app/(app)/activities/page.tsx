@@ -3,6 +3,24 @@ import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import RowActivityActions from './row-actions';
 
+function getRelativeTime(date: Date) {
+  const now = new Date();
+  const diff = now.getTime() - date.getTime();
+
+  const minutes = Math.floor(diff / (1000 * 60));
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const months = Math.floor(days / 30);
+  const years = Math.floor(days / 365);
+
+  if (minutes < 60) return `${minutes}分前`;
+  if (hours < 24) return `${hours}時間前`;
+  if (days < 30) return `${days}日前`;
+  if (months < 12) return `${months}ヶ月前`;
+
+  return `${years}年前`;
+}
+
 export default async function ActivitiesPage() {
   const store = await cookies();
   const uid = store.get('uid')?.value;
@@ -79,8 +97,9 @@ export default async function ActivitiesPage() {
                     </span>
                   </div>
 
+                  {/* 🔵作成日時表示部🔵 */}
                   <div className="text-sm text-gray-500">
-                    {a.scheduledAt ? a.scheduledAt.toLocaleString() : '-'}
+                    {a.createdAt ? a.createdAt.toLocaleString('ja-JP') : '-'}
                   </div>
                 </div>
 

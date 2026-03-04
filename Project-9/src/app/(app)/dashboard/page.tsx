@@ -13,6 +13,25 @@ import { cookies } from 'next/headers';
 
 // ✅関数　DashboardPage部
 
+// 📦活動ページで使用する、時間差異計算部。🤖
+function getRelativeTime(date: Date) {
+  const now = new Date();
+  const diff = now.getTime() - date.getTime();
+
+  const minutes = Math.floor(diff / (1000 * 60));
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const months = Math.floor(days / 30);
+  const years = Math.floor(days / 365);
+
+  if (minutes < 60) return `${minutes}分前`;
+  if (hours < 24) return `${hours}時間前`;
+  if (days < 30) return `${days}日前`;
+  if (months < 12) return `${months}ヶ月前`;
+
+  return `${years}年前`;
+}
+
 export default async function DashboardPage() {
   const store = await cookies();
   const uid = store.get('uid')?.value;
@@ -22,7 +41,8 @@ export default async function DashboardPage() {
   }
   const userId = BigInt(uid);
   // ✅🔵DBから会社数を取得。🔵
-  const companyCount = await prisma.company.count({ where: { userId } });
+  const companyCount = await prisma.company.count();
+  // { where: { userId } }は不要。
   const cmpcount = [{ label: '会社', value: companyCount }];
   // ✅🔵DBから連絡先数を取得。🔵
   const contactCount = await prisma.contact.count({ where: { userId } });
@@ -64,15 +84,33 @@ export default async function DashboardPage() {
     closed_lost: '失注',
   };
 
-  //✅🤖最近の活動　部
-  const activities = await prisma.activity.findMany({
-    where: { userId },
+  // 🆕最近の活動
+  const upcomingActivities = await prisma.activity.findMany({
+    where: {
+      userId,
+      scheduledAt: { gte: new Date() },
+    },
+    include: {
+      company: true,
+      contact: true,
+      deal: true,
+    },
+    orderBy: { scheduledAt: 'asc' },
+  });
+  // 🆕今後の活動　（分けて定数を定義）
+
+  const resentActivities = await prisma.activity.findMany({
+    where: {
+      userId,
+      scheduledAt: { lt: new Date() },
+    },
     include: {
       company: true,
       contact: true,
       deal: true,
     },
     orderBy: { scheduledAt: 'desc' },
+    take: 5,
   });
 
   const typeLabel: Record<string, string> = {
@@ -202,54 +240,123 @@ export default async function DashboardPage() {
       </section>
 
       {/* ✅活動の2カード表示部　🤖 */}
+      {/* --------------------⬇️今後の活動⬇️-------------------- */}
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="rounded-lg border bg-white p-5">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between ">
             <h2 className="text-sm font-semibold">今後の活動</h2>
-            <button className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+
+            <Link
+              href="/activities/new"
+              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
+            >
               新規活動
-            </button>
+            </Link>
+            {/* {a.scheduledAt && (
+              <div className="text-sm text-gray-600 mt-2">
+                予定日時: {a.scheduledAt.toLocaleString()}
+              </div>
+            )} */}
           </div>
-          <p className="mt-4 text-sm text-gray-600">
-            今後の活動が見つかりませんでした。
-          </p>
+
+          <div className="mt-4 space-y-4">
+            {upcomingActivities.map((a, i) => (
+              <div key={i} className="flex gap-4">
+                <div className="mt-1 w-1 rounded bg-indigo-500" />
+
+                <div className="flex-1">
+                  {/* ❶タイトル */}
+                  <div className="flex items-center justify-between">
+                    <div className="font-semibold">{a.title}</div>
+                    <div>
+                      {a.scheduledAt
+                        ? a.scheduledAt.toLocaleString('ja-JP', {
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                          })
+                        : '-'}
+                      <br />
+                      の活動予定。✅
+                    </div>
+                  </div>
+
+                  {/* ❷タイプ */}
+                  <div className="text-sm text-gray-700">
+                    タイプ：{typeLabel[a.type] ?? a.type}
+                  </div>
+
+                  {/* ❸関連（会社） */}
+                  {a.company && (
+                    <div className="text-sm">
+                      関連：
+                      <Link
+                        href={`/companies/${a.companyId}`}
+                        className="text-indigo-600 hover:underline"
+                      >
+                        {a.company.name}
+                      </Link>
+                    </div>
+                  )}
+                  {upcomingActivities.length === 0 && (
+                    <div className="text-sm text-gray-500">
+                      活動がまだ登録されていません。
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </section>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <section className="rounded-lg border bg-white p-5">
+        {/* --------------------⬇️最近の活動⬇️-------------------- */}
+
+        <section className="rounded-lg border bg-white p-5">
+          <div className="flex items-center">
             <h2 className="text-sm font-semibold">最近の活動</h2>
+          </div>
 
-            <div className="mt-4 space-y-4">
-              {activities.map((a, i) => (
-                <div key={i} className="flex gap-4">
-                  <div className="mt-1 w-1 rounded bg-indigo-500" />
+          <div className="mt-4 space-y-4">
+            {resentActivities.map((a, i) => (
+              <div key={i} className="flex gap-4">
+                <div className="mt-1 w-1 rounded bg-indigo-500" />
 
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div className="font-semibold">{a.title}</div>
+                <div className="flex-1">
+                  {/* ❶タイトル */}
+                  <div className="flex items-center justify-between">
+                    <div className="font-semibold">{a.title}</div>
+                    <div>
+                      {a.scheduledAt ? a.scheduledAt.toLocaleString() : '-'}
                     </div>
-
-                    <div className="text-sm text-gray-700">
-                      タイプ：{typeLabel[a.type] ?? a.type}
-                    </div>
-
-                    {a.company && (
-                      <div className="text-sm">
-                        関連：
-                        <Link
-                          href={`/companies/${a.companyId}`}
-                          className="text-indigo-600 hover:underline"
-                        >
-                          {a.company.name}
-                        </Link>
-                      </div>
-                    )}
                   </div>
+
+                  {/* ❷タイプ */}
+                  <div className="text-sm text-gray-700">
+                    タイプ：{typeLabel[a.type] ?? a.type}
+                  </div>
+
+                  {/* ❸関連（会社） */}
+                  {a.company && (
+                    <div className="text-sm">
+                      関連：
+                      <Link
+                        href={`/companies/${a.companyId}`}
+                        className="text-indigo-600 hover:underline"
+                      >
+                        {a.company.name}
+                      </Link>
+                    </div>
+                  )}
+                  {resentActivities.length === 0 && (
+                    <div className="text-sm text-gray-500">
+                      活動がまだ登録されていません。
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
-          </section>
-        </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );
