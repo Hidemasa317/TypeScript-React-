@@ -4,7 +4,9 @@ import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
 export default function ResetPage() {
+  // ✅URLのパラメータを取得。
   const params = useParams();
+  // ✅トークンを取得。文字列型で。
   const token = params.token as string;
 
   const [password, setPassword] = useState('');
@@ -14,8 +16,8 @@ export default function ResetPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token, password }),
     });
+    alert('パスワードをリセットしました。');
   }
-  alert('パスワードをリセットしました。');
 
   return (
     <div className="max-w-md mx-auto space-y-4">

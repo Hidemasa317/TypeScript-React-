@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     },
   });
 
-  const resetLink = `http://localhost:3000/reset/${token}`;
+  const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/reset/${token}`;
   console.log(`パスワードリセットリンク: ${resetLink}`);
 
   return NextResponse.json({ ok: true });

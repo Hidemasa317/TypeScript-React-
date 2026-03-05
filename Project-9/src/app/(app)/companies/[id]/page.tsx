@@ -31,6 +31,12 @@ export default async function CompanyDetailPage({ params }: Props) {
     notFound();
   }
 
+  // 🔴Adminユーザ権限設定🔴
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
   return (
     <div className="space-y-6">
       {/* タイトル */}
@@ -38,14 +44,19 @@ export default async function CompanyDetailPage({ params }: Props) {
         <h1 className="text-2xl font-semibold">{company.name}</h1>
 
         <div className="flex gap-3">
+
+         {user?.role === 'admin' && (
           <Link
             href={`/companies/${company.id}/edit`}
             className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white"
           >
             編集
           </Link>
-
+          )}
+         {user?.role === 'admin' && (
           <DeleteButton id={company.id.toString()} />
+         )}
+         
         </div>
       </div>
 

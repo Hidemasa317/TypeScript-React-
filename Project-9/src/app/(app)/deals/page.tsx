@@ -62,66 +62,78 @@ export default async function DealsPage() {
             </tr>
           </thead>
           <tbody className="divide-y">
-            {/* ✅map で、格納された定数から取り出す。 */}
-            {deals.map((c) => (
-              <tr key={String(c.id)}>
-                {/* ✅　❶タイトル　*/}
-                <td className="px-5 py-4">
-                  <Link
-                    href={`/deals/${c.id}`}
-                    className="text-indigo-600 hover:underline"
-                  >
-                    {c.title}
-                  </Link>
-                </td>
-                {/* ✅　❷会社　*/}
-                <td className="px-5 py-4">
-                  {c.company ? (
+            {deals.map((c) => {
+              const dealStatusColor =
+                c.status === 'closed_won'
+                  ? 'bg-green-100 text-green-700'
+                  : c.status === 'closed_lost'
+                    ? 'bg-red-100 text-red-700'
+                    : 'bg-blue-100 text-blue-700';
+
+              return (
+                <tr key={String(c.id)}>
+                  {/* ✅　❶タイトル　*/}
+                  <td className="px-5 py-4">
                     <Link
-                      href={`/companies/${c.companyId}`}
+                      href={`/deals/${c.id}`}
                       className="text-indigo-600 hover:underline"
                     >
-                      {c.company.name}
+                      {c.title}
                     </Link>
-                  ) : (
-                    '-'
-                  )}
-                </td>
-                {/* ✅ ❸連絡先 リンク必要🚨　*/}
-                <td className="px-5 py-4">
-                  {c.contact ? (
-                    <Link
-                      href={`/contacts/${c.contactId}`}
-                      className="text-indigo-600 hover:underline"
+                  </td>
+                  {/* ✅　❷会社　*/}
+                  <td className="px-5 py-4">
+                    {c.company ? (
+                      <Link
+                        href={`/companies/${c.companyId}`}
+                        className="text-indigo-600 hover:underline"
+                      >
+                        {c.company.name}
+                      </Link>
+                    ) : (
+                      '-'
+                    )}
+                  </td>
+                  {/* ✅ ❸連絡先 リンク必要🚨　*/}
+                  <td className="px-5 py-4">
+                    {c.contact ? (
+                      <Link
+                        href={`/contacts/${c.contactId}`}
+                        className="text-indigo-600 hover:underline"
+                      >
+                        {c.contact.firstName} {c.contact.lastName}
+                      </Link>
+                    ) : (
+                      '-'
+                    )}
+                  </td>
+                  {/* ✅　❹金額 リンクは必要ない。 */}
+                  <td className="px-5 py-4">
+                    {c.amount ? Number(c.amount).toLocaleString() : '-'}
+                  </td>
+                  {/* ✅　❺スタータス　プルダウン式の新要素　🔵 */}
+                  <td className="px-5 py-4">
+                    <span
+                      className={`rounded-full px-3 py-1 text-xs font-medium ${dealStatusColor}`}
                     >
-                      {c.contact.firstName} {c.contact.lastName}
-                    </Link>
-                  ) : (
-                    '-'
-                  )}
-                </td>
-                {/* ✅　❹金額 リンクは必要ない。 */}
-                <td className="px-5 py-4">
-                  {c.amount ? Number(c.amount).toLocaleString() : '-'}
-                </td>
-                {/* ✅　❺スタータス　プルダウン式の新要素　🔵 */}
-                <td className="px-5 py-4">
-                  {statusLabels[c.status] ?? c.status}
-                </td>
+                      {statusLabels[c.status] ?? c.status}
+                    </span>
+                  </td>
 
-                {/* ✅　❻見込み制約日 */}
-                <td className="px-5 py-4">
-                  {c.expectedClosingDate
-                    ? c.expectedClosingDate.toLocaleDateString()
-                    : '-'}
-                </td>
+                  {/* ✅　❻見込み制約日 */}
+                  <td className="px-5 py-4">
+                    {c.expectedClosingDate
+                      ? c.expectedClosingDate.toLocaleDateString()
+                      : '-'}
+                  </td>
 
-                <td className="px-5 py-4">
-                  {/* ✅🤖　❻アクション 編集削除 部位 */}
-                  <RowDealActions id={String(c.id)} />
-                </td>
-              </tr>
-            ))}
+                  <td className="px-5 py-4">
+                    {/* ✅🤖　❻アクション 編集削除 部位 */}
+                    <RowDealActions id={String(c.id)} />
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
