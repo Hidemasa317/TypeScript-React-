@@ -129,7 +129,7 @@ export default async function DashboardPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* ✅配列の数分、UIを繰り返す。 */}
         {cmpcount.map((s) => (
-          <div key={s.label} className="rounded-lg border bg-white p-5">
+          <div key={s.label} className="rounded-lg bg-white p-5 shadow-sm">
             {/* ✅label・会社を取得 */}
             <div className="text-sm text-gray-600">{s.label}</div>
             {/* ✅conpanyCountを取得 */}
@@ -138,7 +138,7 @@ export default async function DashboardPage() {
         ))}
 
         {ctcCount.map((s) => (
-          <div key={s.label} className="rounded-lg border bg-white p-5">
+          <div key={s.label} className="rounded-lg bg-white p-5 shadow-sm">
             {/* ✅label・会社を取得 */}
             <div className="text-sm text-gray-600">{s.label}</div>
             {/* ✅conpanyCountを取得 */}
@@ -147,7 +147,7 @@ export default async function DashboardPage() {
         ))}
 
         {dlCount.map((s) => (
-          <div key={s.label} className="rounded-lg border bg-white p-5">
+          <div key={s.label} className="rounded-lg bg-white p-5 shadow-sm">
             {/* ✅label・会社を取得 */}
             <div className="text-sm text-gray-600">{s.label}</div>
             {/* ✅conpanyCountを取得 */}
@@ -156,7 +156,7 @@ export default async function DashboardPage() {
         ))}
 
         {wonCount.map((s) => (
-          <div key={s.label} className="rounded-lg border bg-white p-5">
+          <div key={s.label} className="rounded-lg bg-white p-5 shadow-sm">
             {/* ✅label・会社を取得 */}
             <div className="text-sm text-gray-600">{s.label}</div>
             {/* ✅conpanyCountを取得 */}
@@ -166,8 +166,8 @@ export default async function DashboardPage() {
       </div>
 
       {/* ✅🤖　🆕　進行中の商談部 */}
-      <section className="rounded-lg border bg-white">
-        <div className="flex items-center justify-between border-b px-5 py-4">
+      <section className="rounded-lg bg-white shadow-sm">
+        <div className="flex items-center justify-between  px-5 py-4 shadow-sm">
           <h1 className="text-sm font-semibold">進行中の商談</h1>
         </div>
 
@@ -182,7 +182,7 @@ export default async function DashboardPage() {
                 <th className="px-5 py-3 text-left">見込み制約日</th>
               </tr>
             </thead>
-            <tbody className="divide-y">
+            <tbody className="divide-y divide-gray-100">
               {deals.map((c) => {
                 const dealStatusColor =
                   c.status === 'closed_won'
@@ -230,17 +230,17 @@ export default async function DashboardPage() {
                     </td>
 
                     {/* ✅　❻見込み制約日 */}
-                    <td className="px-5 py-4">
+                    <td className="px-5 py-4 text-sm text-gray-500">
                       {c.expectedClosingDate
-                        ? c.expectedClosingDate.toLocaleDateString()
-                        : '-'}
+                        ? c.expectedClosingDate.toLocaleDateString('ja-Jp')
+                        : '-'} 日
                     </td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
-          <div className="flex items-center justify-between border-b px-5 py-4">
+          <div className="flex items-center justify-between  px-5 py-4 shadow-sm">
             <Link
               href="/deals/new"
               className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
@@ -254,7 +254,7 @@ export default async function DashboardPage() {
       {/* ✅活動の2カード表示部　🤖 */}
       {/* --------------------⬇️今後の活動⬇️-------------------- */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <section className="rounded-lg border bg-white p-5">
+        <section className="rounded-lg bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between ">
             <h2 className="text-sm font-semibold">今後の活動</h2>
 
@@ -330,7 +330,7 @@ export default async function DashboardPage() {
 
         {/* --------------------⬇️最近の活動⬇️-------------------- */}
 
-        <section className="rounded-lg border bg-white p-5">
+        <section className="rounded-lg bg-white p-5 shadow-sm">
           <div className="flex items-center">
             <h2 className="text-sm font-semibold">最近の活動</h2>
           </div>
@@ -349,8 +349,11 @@ export default async function DashboardPage() {
                   {/* ❶タイトル */}
                   <div className="flex items-center justify-between">
                     <div className="font-semibold">{a.title}</div>
-                    <div>
-                      {a.scheduledAt ? a.scheduledAt.toLocaleString() : '-'}
+                    <div className="text-sm text-gray-500">
+                      予定日時:
+                      {a.scheduledAt
+                        ? a.scheduledAt.toLocaleString('ja-JP')
+                        : '-'}
                     </div>
                   </div>
 

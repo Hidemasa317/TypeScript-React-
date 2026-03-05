@@ -59,11 +59,14 @@ export default async function EditActivityPage({
           id: c.id.toString(),
           firstName: c.firstName,
           lastName: c.lastName,
+          companyId: c.companyId.toString(),
         }))}
         // ✅📦🆕
         deals={deals.map((d) => ({
           id: d.id.toString(),
           title: d.title,
+          companyId: d.companyId.toString(),
+          contactId: d.contactId ? d.contactId.toString() : '',
         }))}
         initial={{
           companyId: activity.companyId?.toString() ?? '',

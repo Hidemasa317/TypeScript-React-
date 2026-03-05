@@ -23,7 +23,7 @@ export default function TopNavClient({ userNow }: { userNow: User }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="border-b bg-white">
+    <header className="shadow-sm bg-white">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <div className="flex items-center gap-4">
           <Link

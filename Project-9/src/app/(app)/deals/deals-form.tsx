@@ -80,11 +80,18 @@ export default function DealsForm({
   }
 
   return (
-    <section className="rounded-lg border bg-white p-6 space-y-4">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSave();
+      }}
+      className="rounded-lg border bg-white p-6 space-y-4"
+    >
       {/* 🚨ここに会社選択欄を追加 */}
       <div>
         <label className="block text-sm font-medium text-slate-700">会社</label>
         <select
+          required
           className="mt-2 w-full rounded-md border px-3 py-2"
           value={v.companyId}
           onChange={(e) =>
@@ -107,6 +114,7 @@ export default function DealsForm({
           連絡先
         </label>
         <select
+          required
           className="mt-2 w-full rounded-md border px-3 py-2"
           value={v.contactId}
           onChange={(e) => setV({ ...v, contactId: e.target.value })}
@@ -125,11 +133,13 @@ export default function DealsForm({
 
       <Field
         label="タイトル"
+        required
         value={v.title}
         onChange={(x) => setV({ ...v, title: x })}
       />
       <Field
         label="金額"
+        required
         value={v.amount}
         onChange={(x) => setV({ ...v, amount: x })}
       />
@@ -202,13 +212,14 @@ export default function DealsForm({
           キャンセル
         </button>
         <button
+          type="submit"
           className="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
           onClick={onSave}
         >
           保存
         </button>
       </div>
-    </section>
+    </form>
   );
 }
 
@@ -217,11 +228,13 @@ function Field({
   value,
   onChange,
   textarea,
+  required,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   textarea?: boolean;
+  required?: boolean;
 }) {
   return (
     <div>
@@ -230,6 +243,7 @@ function Field({
       </label>
       {textarea ? (
         <textarea
+          required={required}
           className="mt-2 w-full rounded-md border px-3 py-2"
           rows={4}
           value={value}
@@ -237,6 +251,7 @@ function Field({
         />
       ) : (
         <input
+          required={required}
           className="mt-2 w-full rounded-md border px-3 py-2"
           value={value}
           onChange={(e) => onChange(e.target.value)}

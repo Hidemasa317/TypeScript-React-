@@ -49,8 +49,8 @@ export default async function CompaniesPage({
   });
 
   return (
-    <section className="rounded-lg border bg-white">
-      <div className="flex items-center justify-between border-b px-5 py-4">
+    <section className="rounded-lg bg-white shadow-sm">
+      <div className="flex items-center justify-between px-5 py-4 shadow-sm">
         <h1 className="text-sm font-semibold">会社</h1>
         {/* Linkはサーバコンポーネントで使用できる。 */}
 
@@ -75,7 +75,7 @@ export default async function CompaniesPage({
               <th className="px-5 py-3 text-left">アクション</th>
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody className="divide-y divide-gray-100">
             {/* ✅map で、格納された定数から取り出す。 */}
             {companies.map((c) => (
               <tr key={String(c.id)}>
@@ -131,7 +131,7 @@ export default async function CompaniesPage({
             {page > 1 && (
               <Link
                 href={`?page=${page - 1}`}
-                className="px-2 py-1 border rounded hover:bg-gray-100"
+                className="px-2 py-1  rounded hover:bg-gray-100 shadow-sm"
               >
                 &lt;
               </Link>
@@ -145,7 +145,7 @@ export default async function CompaniesPage({
                 <Link
                   key={pageNumber}
                   href={`?page=${pageNumber}`}
-                  className={`px-3 py-1 border rounded ${
+                  className={`px-3 py-1 rounded shadow-sm ${
                     page === pageNumber
                       ? 'bg-gray-200 font-semibold'
                       : 'hover:bg-gray-100'
@@ -160,7 +160,7 @@ export default async function CompaniesPage({
             {page < totalPages && (
               <Link
                 href={`?page=${page + 1}`}
-                className="px-2 py-1 border rounded hover:bg-gray-100"
+                className="px-2 py-1 rounded hover:bg-gray-100 shadow-sm"
               >
                 &gt;
               </Link>
