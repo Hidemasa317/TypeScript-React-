@@ -40,11 +40,14 @@ export default async function NewActivityPage() {
           id: c.id.toString(),
           firstName: c.firstName,
           lastName: c.lastName,
+          companyId: c.companyId.toString(),
         }))}
         // ✅商談情報
         deals={deals.map((c) => ({
           id: c.id.toString(),
           title: c.title,
+          companyId: c.companyId.toString() ?? '',
+          contactId: c.contactId?.toString() ?? '',
         }))}
       />
     </div>

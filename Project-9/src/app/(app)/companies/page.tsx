@@ -7,10 +7,11 @@ export default async function CompaniesPage({
   searchParams,
 }: {
   searchParams: Promise<{ page?: string | string[] }>;
+  // 💎searchParams は Promise
 }) {
   const params = await searchParams;
-  // 🍪
 
+  // 🍪
   const store = await cookies();
   const uid = store.get('uid')?.value;
   if (!uid) {

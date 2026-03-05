@@ -21,12 +21,36 @@ function getRelativeTime(date: Date) {
   return `${years}年前`;
 }
 
-export default async function ActivitiesPage() {
+export default async function ActivitiesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string | string[] }>;
+  // 💎searchParams は Promise
+}) {
+  // 🍪
   const store = await cookies();
   const uid = store.get('uid')?.value;
-  if (!uid) return null;
-
+  if (!uid) {
+    return <div className="p-6">ログインしてください</div>;
+  }
   const userId = BigInt(uid);
+
+  // 📦📄Page
+
+  const params = await searchParams;
+  const pageParam = Array.isArray(params.page) ? params.page[0] : params.page;
+
+  const page = Number(pageParam ?? 1);
+  const pageSize = 10;
+  const skip = (page - 1) * pageSize;
+
+  const total = await prisma.company.count();
+  const totalPages = Math.ceil(total / pageSize);
+
+  // 表示開始番号
+  const start = skip + 1;
+  // 表示終了番号
+  const end = Math.min(skip + pageSize, total);
 
   const activities = await prisma.activity.findMany({
     where: { userId },
@@ -157,6 +181,57 @@ export default async function ActivitiesPage() {
             活動がまだ登録されていません。
           </div>
         )}
+
+        {/* 📦📄Page */}
+
+        <div className="flex items-center justify-between p-4 text-sm">
+          {/* 左側 表示件数 */}
+          <div className="text-gray-600">
+            Showing {start} to {end} of {total} results
+          </div>
+
+          {/* 右側 ページ番号 */}
+          <div className="flex items-center gap-1">
+            {/* 前ページ */}
+            {page > 1 && (
+              <Link
+                href={`?page=${page - 1}`}
+                className="px-2 py-1 border rounded hover:bg-gray-100"
+              >
+                &lt;
+              </Link>
+            )}
+
+            {/* ページ番号 */}
+            {Array.from({ length: totalPages }).map((_, i) => {
+              const pageNumber = i + 1;
+
+              return (
+                <Link
+                  key={pageNumber}
+                  href={`?page=${pageNumber}`}
+                  className={`px-3 py-1 border rounded ${
+                    page === pageNumber
+                      ? 'bg-gray-200 font-semibold'
+                      : 'hover:bg-gray-100'
+                  }`}
+                >
+                  {pageNumber}
+                </Link>
+              );
+            })}
+
+            {/* 次ページ */}
+            {page < totalPages && (
+              <Link
+                href={`?page=${page + 1}`}
+                className="px-2 py-1 border rounded hover:bg-gray-100"
+              >
+                &gt;
+              </Link>
+            )}
+          </div>
+        </div>
       </div>
     </section>
   );

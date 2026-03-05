@@ -35,6 +35,7 @@ export default async function NewDealPage() {
           id: c.id.toString(),
           firstName: c.firstName,
           lastName: c.lastName,
+          companyId: c.companyId.toString(),
         }))}
       />
     </div>

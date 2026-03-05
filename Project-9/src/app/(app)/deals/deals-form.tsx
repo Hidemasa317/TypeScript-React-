@@ -27,7 +27,12 @@ export default function DealsForm({
   id?: string;
   initial?: Partial<Values>;
   companies: { id: string; name: string }[];
-  contacts: { id: string; firstName: string; lastName: string }[]; //✅props contactsを追加🚨
+  contacts: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    companyId: string;
+  }[]; //✅props contactsを追加🚨
 }) {
   const router = useRouter();
   const [v, setV] = useState<Values>({
@@ -82,7 +87,9 @@ export default function DealsForm({
         <select
           className="mt-2 w-full rounded-md border px-3 py-2"
           value={v.companyId}
-          onChange={(e) => setV({ ...v, companyId: e.target.value })}
+          onChange={(e) =>
+            setV({ ...v, companyId: e.target.value, contactId: '' })
+          }
         >
           <option value="">会社を選択</option>
           {companies.map((c) => (
@@ -105,12 +112,14 @@ export default function DealsForm({
           onChange={(e) => setV({ ...v, contactId: e.target.value })}
         >
           <option value="">連絡先を選択</option>
-          {contacts.map((c) => (
-            <option key={c.id} value={c.id}>
-              {/* ✅　連絡先取得なので、　firstName と、lastName取得。 */}
-              {c.firstName} {c.lastName}
-            </option>
-          ))}
+          {contacts
+            .filter((c) => c.companyId === v.companyId)
+            .map((c) => (
+              <option key={c.id} value={c.id}>
+                {/* ✅　連絡先取得なので、　firstName と、lastName取得。 */}
+                {c.firstName} {c.lastName}
+              </option>
+            ))}
         </select>
       </div>
 

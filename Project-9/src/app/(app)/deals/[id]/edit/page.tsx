@@ -54,6 +54,7 @@ export default async function EditDealPage({
           id: c.id.toString(),
           firstName: c.firstName,
           lastName: c.lastName,
+          companyId: c.companyId.toString(),
         }))}
         initial={{
           companyId: deal.companyId.toString(),

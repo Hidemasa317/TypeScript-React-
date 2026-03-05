@@ -272,6 +272,13 @@ export default async function DashboardPage() {
           </div>
 
           <div className="mt-4 space-y-4">
+            {/* 🆕文言追加 */}
+            {upcomingActivities.length === 0 && (
+              <div className="text-sm text-gray-500">
+                今後の活動はありません。
+              </div>
+            )}
+
             {upcomingActivities.map((a, i) => (
               <div key={i} className="flex gap-4">
                 <div className="mt-1 w-1 rounded bg-indigo-500" />
@@ -280,7 +287,7 @@ export default async function DashboardPage() {
                   {/* ❶タイトル */}
                   <div className="flex items-center justify-between">
                     <div className="font-semibold">{a.title}</div>
-                    <div>
+                    <div className="text-sm text-gray-500">
                       {a.scheduledAt
                         ? a.scheduledAt.toLocaleString('ja-JP', {
                             month: '2-digit',
@@ -289,7 +296,7 @@ export default async function DashboardPage() {
                           })
                         : '-'}
                       <br />
-                      の活動予定。✅
+                      の活動予定。🗓️
                     </div>
                   </div>
 
@@ -329,6 +336,11 @@ export default async function DashboardPage() {
           </div>
 
           <div className="mt-4 space-y-4">
+            {resentActivities.length === 0 && (
+              <div className="text-sm text-gray-500">
+                今後の活動はありません。
+              </div>
+            )}
             {resentActivities.map((a, i) => (
               <div key={i} className="flex gap-4">
                 <div className="mt-1 w-1 rounded bg-indigo-500" />
