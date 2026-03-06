@@ -1,0 +1,9 @@
+-- CreateTable
+CREATE TABLE "Tax" (
+    "id" BIGSERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "rate" DOUBLE PRECISION NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Tax_pkey" PRIMARY KEY ("id")
+);
