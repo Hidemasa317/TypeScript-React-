@@ -67,7 +67,7 @@ export default function CompanyForm({
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        onSave;
+        onSave();
       }}
       className="rounded-lg border bg-white p-6 space-y-4"
     >
