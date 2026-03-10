@@ -26,7 +26,7 @@ export default async function DealsPage({
   const pageSize = 10;
   const skip = (page - 1) * pageSize;
 
-  const total = await prisma.company.count();
+  const total = await prisma.deal.count();
   const totalPages = Math.ceil(total / pageSize);
 
   // 表示開始番号
@@ -36,7 +36,7 @@ export default async function DealsPage({
 
   // ✅prismaで　dealテーブルから取得し、格納。
   const deals = await prisma.deal.findMany({
-    where: { userId },
+    // where: { userId },
     include: { company: true, contact: true }, //✅🚨
     orderBy: { createdAt: 'desc' },
   });
@@ -53,13 +53,13 @@ export default async function DealsPage({
   };
 
   return (
-    <section className="rounded-lg border bg-white">
-      <div className="flex items-center justify-between border-b px-5 py-4">
+    <section className="rounded-lg bg-white shadow-sm">
+      <div className="flex items-center justify-between px-5 py-4 shadow-sm">
         <h1 className="text-sm font-semibold">商談</h1>
         {/* Linkはサーバコンポーネントで使用できる。 */}
         <Link
           href="/deals/new"
-          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
+          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm"
         >
           商談を追加
         </Link>
@@ -82,7 +82,7 @@ export default async function DealsPage({
               probability Int? description String? note String? */}
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody className="divide-y divide-gray-100">
             {deals.map((c) => {
               const dealStatusColor =
                 c.status === 'closed_won'

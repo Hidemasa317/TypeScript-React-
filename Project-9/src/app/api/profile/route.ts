@@ -93,6 +93,7 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ message: 'User not found' }, { status: 404 });
   }
 
+  // 📦入力PWと、DBのハッシュパスワードを比較。
   const ok = await bcrypt.compare(password, user.passwordHash);
   if (!ok) {
     return NextResponse.json(

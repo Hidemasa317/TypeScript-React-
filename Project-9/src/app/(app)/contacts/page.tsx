@@ -21,7 +21,7 @@ export default async function ContactsPage({
 
   // ✅prismaで　contactテーブルから取得し、格納。
   const contacts = await prisma.contact.findMany({
-    where: { userId },
+    // where: { userId },
     include: { company: true }, //✅🚨
     orderBy: { createdAt: 'desc' },
   });
@@ -33,7 +33,7 @@ export default async function ContactsPage({
   const pageSize = 10;
   const skip = (page - 1) * pageSize;
 
-  const total = await prisma.company.count();
+  const total = await prisma.contact.count();
   const totalPages = Math.ceil(total / pageSize);
 
   // 表示開始番号
@@ -42,8 +42,8 @@ export default async function ContactsPage({
   const end = Math.min(skip + pageSize, total);
 
   return (
-    <section className="rounded-lg border bg-white">
-      <div className="flex items-center justify-between border-b px-5 py-4">
+    <section className="rounded-lg bg-white shadow-sm">
+      <div className="flex items-center justify-between px-5 py-4 shadow-sm">
         <h1 className="text-sm font-semibold">連絡先</h1>
         {/* Linkはサーバコンポーネントで使用できる。 */}
         <Link
@@ -73,7 +73,7 @@ export default async function ContactsPage({
               // / note String? */}
             </tr>
           </thead>
-          <tbody className="divide-y">
+          <tbody className="divide-y divide-gray-100">
             {/* ✅map で、格納された定数から取り出す。 */}
             {contacts.map((c) => (
               <tr key={String(c.id)}>

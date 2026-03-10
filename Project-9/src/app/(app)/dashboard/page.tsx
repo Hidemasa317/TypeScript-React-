@@ -1,6 +1,9 @@
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
+import CmpRend from '@/components/layout/Dashboard/dashboardForm';
+import { Londrina_Sketch } from 'next/font/google';
+
 // ✅🤖URL毎のページ本体、描画を担う片割れ。会社ページ・連絡先ページ等を探しに行く。
 
 // function StatusPill({ text }: { text: string }) {
@@ -45,17 +48,18 @@ export default async function DashboardPage() {
   // { where: { userId } }は不要。
   const cmpcount = [{ label: '会社', value: companyCount }];
   // ✅🔵DBから連絡先数を取得。🔵
-  const contactCount = await prisma.contact.count({ where: { userId } });
+  const contactCount = await prisma.contact.count();
   const ctcCount = [{ label: '連絡先', value: contactCount }];
 
   // ✅🔵DBから商談数を取得。🔵
-  const dealCount = await prisma.deal.count({ where: { userId } });
+  const dealCount = await prisma.deal.count();
+  // 閲覧制限をかけるときに、引数に➡️{ where: { userId }を記述。
   const dlCount = [{ label: '商談', value: dealCount }];
 
   const closedWonCount = await prisma.deal.count({
     where: {
       status: 'closed_won',
-      userId,
+      // userId,
     },
   });
 
@@ -68,7 +72,7 @@ export default async function DashboardPage() {
 
   // ✅prismaで　dealテーブルから取得し、格納。
   const deals = await prisma.deal.findMany({
-    where: { userId },
+    // where: { userId },
     include: { company: true, contact: true }, //✅🚨
     orderBy: { createdAt: 'desc' },
   });
@@ -84,10 +88,11 @@ export default async function DashboardPage() {
     closed_lost: '失注',
   };
 
-  // 🆕最近の活動
+  // 🆕今後の活動
   const upcomingActivities = await prisma.activity.findMany({
     where: {
-      userId,
+      // userId,
+
       scheduledAt: { gte: new Date() },
     },
     include: {
@@ -97,11 +102,11 @@ export default async function DashboardPage() {
     },
     orderBy: { scheduledAt: 'asc' },
   });
-  // 🆕今後の活動　（分けて定数を定義）
+  // 🆕最近の活動　（分けて定数を定義）
 
   const resentActivities = await prisma.activity.findMany({
     where: {
-      userId,
+      // userId,
       scheduledAt: { lt: new Date() },
     },
     include: {
@@ -121,6 +126,11 @@ export default async function DashboardPage() {
     memo: 'メモ',
   };
 
+  // 🚨CmpRend用
+  const company = await prisma.company.findMany({
+    select: { id: true, name: true },
+  });
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold">ダッシュボード</h1>
@@ -134,32 +144,35 @@ export default async function DashboardPage() {
             <div className="text-sm text-gray-600">{s.label}</div>
             {/* ✅conpanyCountを取得 */}
             <div className="mt-2 text-3xl font-semibold">{s.value}</div>
+            {/* 🚨　CmpRend */}
+            <CmpRend company={company} />
           </div>
         ))}
 
+        {/* 🚨ここを改修 */}
         {ctcCount.map((s) => (
           <div key={s.label} className="rounded-lg bg-white p-5 shadow-sm">
-            {/* ✅label・会社を取得 */}
+            {/* ✅label・連絡先を取得 */}
             <div className="text-sm text-gray-600">{s.label}</div>
-            {/* ✅conpanyCountを取得 */}
+            {/* ✅contactCountを取得 */}
             <div className="mt-2 text-3xl font-semibold">{s.value}</div>
           </div>
         ))}
 
         {dlCount.map((s) => (
           <div key={s.label} className="rounded-lg bg-white p-5 shadow-sm">
-            {/* ✅label・会社を取得 */}
+            {/* ✅label・商談を取得 */}
             <div className="text-sm text-gray-600">{s.label}</div>
-            {/* ✅conpanyCountを取得 */}
+            {/* ✅dealCountを取得 */}
             <div className="mt-2 text-3xl font-semibold">{s.value}</div>
           </div>
         ))}
 
         {wonCount.map((s) => (
           <div key={s.label} className="rounded-lg bg-white p-5 shadow-sm">
-            {/* ✅label・会社を取得 */}
+            {/* ✅label・受注済み商談を取得 */}
             <div className="text-sm text-gray-600">{s.label}</div>
-            {/* ✅conpanyCountを取得 */}
+            {/* ✅wonCountを取得 */}
             <div className="mt-2 text-3xl font-semibold">{s.value}</div>
           </div>
         ))}
@@ -233,7 +246,8 @@ export default async function DashboardPage() {
                     <td className="px-5 py-4 text-sm text-gray-500">
                       {c.expectedClosingDate
                         ? c.expectedClosingDate.toLocaleDateString('ja-Jp')
-                        : '-'} 日
+                        : '-'}{' '}
+                      日
                     </td>
                   </tr>
                 );
@@ -286,7 +300,12 @@ export default async function DashboardPage() {
                 <div className="flex-1">
                   {/* ❶タイトル */}
                   <div className="flex items-center justify-between">
-                    <div className="font-semibold">{a.title}</div>
+                    <Link
+                      href={`/activities/${a.id}`}
+                      className="font-semibold"
+                    >
+                      {a.title}
+                    </Link>
                     <div className="text-sm text-gray-500">
                       {a.scheduledAt
                         ? a.scheduledAt.toLocaleString('ja-JP', {

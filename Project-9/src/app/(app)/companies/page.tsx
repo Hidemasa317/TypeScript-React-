@@ -53,6 +53,7 @@ export default async function CompaniesPage({
       <div className="flex items-center justify-between px-5 py-4 shadow-sm">
         <h1 className="text-sm font-semibold">会社</h1>
         {/* Linkはサーバコンポーネントで使用できる。 */}
+        {user?.role === 'sales_person' && <p>会社作成権限がありません。</p>}
 
         {user?.role === 'admin' && (
           <Link

@@ -44,7 +44,7 @@ export default async function ActivitiesPage({
   const pageSize = 10;
   const skip = (page - 1) * pageSize;
 
-  const total = await prisma.company.count();
+  const total = await prisma.activity.count();
   const totalPages = Math.ceil(total / pageSize);
 
   // 表示開始番号
@@ -53,7 +53,7 @@ export default async function ActivitiesPage({
   const end = Math.min(skip + pageSize, total);
 
   const activities = await prisma.activity.findMany({
-    where: { userId },
+    // where: { userId },
     include: {
       company: true,
       contact: true,
@@ -77,8 +77,8 @@ export default async function ActivitiesPage({
   };
 
   return (
-    <section className="rounded-lg border bg-white">
-      <div className="flex items-center justify-between border-b px-5 py-4">
+    <section className="rounded-lg bg-white shadow-sm">
+      <div className="flex items-center justify-between px-5 py-4 shadow-sm">
         <h1 className="text-sm font-semibold">活動</h1>
 
         <Link

@@ -7,11 +7,17 @@ import DeleteButton from './delete-button';
 //---✅活動詳細ページ---
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export default async function ActivityDetailPage({ params }: Props) {
-  const { id } = params;
+  const { id } = await params;
+  if (!id) {
+    notFound();
+  }
+
+  const activityId = BigInt(id);
+
   const store = await cookies();
   const uid = store.get('uid')?.value;
 
@@ -19,12 +25,12 @@ export default async function ActivityDetailPage({ params }: Props) {
     return <div className="p-6">ログインしてください</div>;
   }
 
-  const userId = BigInt(uid);
-  const activityId = BigInt(id);
+  // const userId = BigInt(uid);
+  // const activityId = BigInt(id);
 
   //🔵🔵　活動ページへの画面遷移に使用する。✅🚨　contact.conpanyId.toString()~
   const activity = await prisma.activity.findFirst({
-    where: { id: activityId, userId },
+    where: { id: activityId },
     include: { company: true, contact: true, deal: true }, //✅🚨
   });
 

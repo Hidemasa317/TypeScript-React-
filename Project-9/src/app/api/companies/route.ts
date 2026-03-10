@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
 
+// ✅JSONに変換する関数（BigIntやDateを文字列化）
 function toCompanyJson(c: any) {
   return {
     ...c,
@@ -25,6 +26,7 @@ export async function GET() {
   if (!userId)
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 
+  // ✅
   const companies = await prisma.company.findMany({
     where: { userId },
     orderBy: { createdAt: 'desc' },
@@ -38,8 +40,6 @@ export async function GET() {
 
 // POST /api/companies
 export async function POST(req: Request) {
-  
-
   const userId = await getUserId();
   if (!userId)
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
