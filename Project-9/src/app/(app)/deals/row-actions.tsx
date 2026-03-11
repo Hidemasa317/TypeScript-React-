@@ -22,7 +22,7 @@ export default function RowDealActions({ id }: { id: string }) {
   }
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-4 font-semibold">
       <Link
         href={`/deals/${id}/edit`}
         className="text-indigo-600 hover:underline"

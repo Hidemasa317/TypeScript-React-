@@ -59,7 +59,7 @@ export default async function DealsPage({
         {/* Linkはサーバコンポーネントで使用できる。 */}
         <Link
           href="/deals/new"
-          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm"
+          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm"
         >
           商談を追加
         </Link>
@@ -94,7 +94,7 @@ export default async function DealsPage({
               return (
                 <tr key={String(c.id)}>
                   {/* ✅　❶タイトル　*/}
-                  <td className="px-5 py-4">
+                  <td className="px-5 py-4 font-semibold">
                     <Link
                       href={`/deals/${c.id}`}
                       className="text-indigo-600 hover:underline"
@@ -103,7 +103,7 @@ export default async function DealsPage({
                     </Link>
                   </td>
                   {/* ✅　❷会社　*/}
-                  <td className="px-5 py-4">
+                  <td className="px-5 py-4 font-semibold">
                     {c.company ? (
                       <Link
                         href={`/companies/${c.companyId}`}
@@ -116,7 +116,7 @@ export default async function DealsPage({
                     )}
                   </td>
                   {/* ✅ ❸連絡先 リンク必要🚨　*/}
-                  <td className="px-5 py-4">
+                  <td className="px-5 py-4 font-semibold">
                     {c.contact ? (
                       <Link
                         href={`/contacts/${c.contactId}`}
@@ -133,7 +133,7 @@ export default async function DealsPage({
                     {c.amount ? Number(c.amount).toLocaleString() : '-'}
                   </td>
                   {/* ✅　❺スタータス　プルダウン式の新要素　🔵 */}
-                  <td className="px-5 py-4">
+                  <td className="px-5 py-4 font-semibold">
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-medium ${dealStatusColor}`}
                     >

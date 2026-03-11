@@ -83,7 +83,7 @@ export default async function ActivitiesPage({
 
         <Link
           href="/activities/new"
-          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
+          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white"
         >
           活動を追加
         </Link>
@@ -115,19 +115,19 @@ export default async function ActivitiesPage({
 
                     {/* 🔵 ステータス色分け */}
                     <span
-                      className={`rounded-full px-3 py-1 text-xs font-medium ${statusColor}`}
+                      className={`rounded-full px-3 py-1 text-xs font-semibold ${statusColor}`}
                     >
                       {statusLabel[a.status] ?? a.status}
                     </span>
                   </div>
 
                   {/* 🔵作成日時表示部🔵 */}
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm font-semibold text-gray-500">
                     {a.createdAt ? a.createdAt.toLocaleString('ja-JP') : '-'}
                   </div>
                 </div>
 
-                <div className="text-sm text-gray-700">
+                <div className="text-sm dont-semibold -gray-700">
                   タイプ：{typeLabel[a.type] ?? a.type}
                 </div>
 
@@ -136,7 +136,7 @@ export default async function ActivitiesPage({
                     会社：
                     <Link
                       href={`/companies/${a.companyId}`}
-                      className="text-indigo-600 hover:underline"
+                      className="text-indigo-600 font-semibold hover:underline"
                     >
                       {a.company.name}
                     </Link>
@@ -148,7 +148,7 @@ export default async function ActivitiesPage({
                     連絡先：
                     <Link
                       href={`/contacts/${a.contactId}`}
-                      className="text-indigo-600 hover:underline"
+                      className="text-indigo-600 font-semibold hover:underline"
                     >
                       {a.contact.firstName} {a.contact.lastName}
                     </Link>
@@ -157,12 +157,12 @@ export default async function ActivitiesPage({
 
                 {/* 予定日時追加 */}
                 {a.scheduledAt && (
-                  <div className="text-sm text-gray-600 mt-2">
+                  <div className="text-sm font-semibold text-gray-600 mt-2">
                     予定日時: {a.scheduledAt.toLocaleString()}
                   </div>
                 )}
                 {a.description && (
-                  <div className="text-sm text-gray-600 mt-2">
+                  <div className="text-sm font-semibold text-gray-600 mt-2">
                     {a.description}
                   </div>
                 )}

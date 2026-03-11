@@ -58,7 +58,7 @@ export default async function CompaniesPage({
         {user?.role === 'admin' && (
           <Link
             href="/companies/new"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
+            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white"
           >
             会社を追加
           </Link>
@@ -81,7 +81,7 @@ export default async function CompaniesPage({
             {companies.map((c) => (
               <tr key={String(c.id)}>
                 {/* ✅会社名 */}
-                <td className="px-5 py-4">
+                <td className="px-5 py-4 font-semibold">
                   <Link
                     href={`/companies/${c.id}`}
                     className="text-indigo-600 hover:underline"
@@ -90,11 +90,11 @@ export default async function CompaniesPage({
                   </Link>
                 </td>
                 {/* ✅業界 */}
-                <td className="px-5 py-4">{c.industry ?? '-'}</td>
+                <td className="px-5 py-4 font-semibold">{c.industry ?? '-'}</td>
                 {/* ✅電話番号 */}
                 <td className="px-5 py-4">{c.phone ?? '-'}</td>
                 {/* ✅ウェブサイト */}
-                <td className="px-5 py-4">
+                <td className="px-5 py-4font-semibold ">
                   {c.website ? (
                     <a
                       href={c.website}

@@ -210,7 +210,7 @@ export default async function DashboardPage() {
                     <td className="px-5 py-4">
                       <Link
                         href={`/deals/${c.id}`}
-                        className="text-indigo-600 hover:underline"
+                        className="text-indigo-600 font-semibold text-sm hover:underline"
                       >
                         {c.title}
                       </Link>
@@ -220,7 +220,7 @@ export default async function DashboardPage() {
                       {c.company ? (
                         <Link
                           href={`/companies/${c.companyId}`}
-                          className="text-indigo-600 hover:underline"
+                          className="text-indigo-600 font-semibold text-sm hover:underline"
                         >
                           {c.company.name}
                         </Link>
@@ -236,14 +236,14 @@ export default async function DashboardPage() {
                     {/* ✅　❺スタータス　プルダウン式の新要素　🔵 */}
                     <td className="px-5 py-4">
                       <span
-                        className={`rounded-full px-3 py-1 text-xs font-medium ${dealStatusColor}`}
+                        className={`rounded-full px-3 py-1 text-xs font-semibold ${dealStatusColor}`}
                       >
                         {statusLabels[c.status] ?? c.status}
                       </span>
                     </td>
 
                     {/* ✅　❻見込み制約日 */}
-                    <td className="px-5 py-4 text-sm text-gray-500">
+                    <td className="px-5 py-4 text-sm font-semibold text-gray-500">
                       {c.expectedClosingDate
                         ? c.expectedClosingDate.toLocaleDateString('ja-Jp')
                         : '-'}{' '}
@@ -306,7 +306,7 @@ export default async function DashboardPage() {
                     >
                       {a.title}
                     </Link>
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm font-semibold text-gray-500">
                       {a.scheduledAt
                         ? a.scheduledAt.toLocaleString('ja-JP', {
                             month: '2-digit',
@@ -368,7 +368,7 @@ export default async function DashboardPage() {
                   {/* ❶タイトル */}
                   <div className="flex items-center justify-between">
                     <div className="font-semibold">{a.title}</div>
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm font-semibold text-gray-500">
                       予定日時:
                       {a.scheduledAt
                         ? a.scheduledAt.toLocaleString('ja-JP')

@@ -16,7 +16,7 @@ export default function CmpRend({ company }: { company: Company[] }) {
         onClick={() => {
           setOpen(!open);
         }}
-        className="text-indigo-600 font-semibold text-sm text-black-600 hover:underline"
+        className="text-indigo-600 font-semibold text-sm hover:underline"
       >
         会社を閲覧
       </button>

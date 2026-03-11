@@ -48,7 +48,7 @@ export default async function ContactsPage({
         {/* Linkはサーバコンポーネントで使用できる。 */}
         <Link
           href="/contacts/new"
-          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
+          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white"
         >
           連絡先を追加
         </Link>
@@ -78,17 +78,17 @@ export default async function ContactsPage({
             {contacts.map((c) => (
               <tr key={String(c.id)}>
                 {/* ✅　❶氏名　*/}
-                <td className="px-5 py-4">
+                <td className="px-5 py-4 font-semibold">
                   <Link
                     href={`/contacts/${c.id}`}
                     className="text-indigo-600 hover:underline"
                   >
-                    {c.firstName}
                     {c.lastName}
+                    {c.firstName}
                   </Link>
                 </td>
                 {/* ✅　❷会社　ここに❶を移行 */}
-                <td className="px-5 py-4">
+                <td className="px-5 py-4 font-semibold">
                   {c.company ? (
                     <Link
                       href={`/companies/${c.companyId}`}
