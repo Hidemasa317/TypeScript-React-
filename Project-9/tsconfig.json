@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "src/components/layout/CmpRend", "src/components/layout/CtcRend"  ],
   "exclude": ["node_modules"]
 }

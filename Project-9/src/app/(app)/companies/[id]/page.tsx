@@ -48,7 +48,7 @@ export default async function CompanyDetailPage({ params }: Props) {
          {user?.role === 'admin' && (
           <Link
             href={`/companies/${company.id}/edit`}
-            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white"
+            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white"
           >
             編集
           </Link>

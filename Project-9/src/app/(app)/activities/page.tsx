@@ -99,7 +99,7 @@ export default async function ActivitiesPage({
                 : 'bg-blue-100 text-blue-700';
 
           return (
-            <div key={String(a.id)} className="flex gap-4">
+            <div key={String(a.id)} className="flex gap-4 shadow-lg">
               {/* 左の縦ライン */}
               <div className="mt-1 w-1 rounded bg-indigo-500" />
 

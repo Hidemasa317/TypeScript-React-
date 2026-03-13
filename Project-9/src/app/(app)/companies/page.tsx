@@ -65,8 +65,8 @@ export default async function CompaniesPage({
         )}
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-sm">
+      <div className="overflow-x-auto shadow-lg">
+        <table className="min-w-full text-sm shadow-sm">
           <thead className="bg-gray-50 text-gray-800">
             <tr>
               <th className="px-5 py-3 text-left">名前</th>

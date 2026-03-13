@@ -25,7 +25,7 @@ export default function DeleteButton({ id }: { id: string }) {
   return (
     <button
       onClick={handleDelete}
-      className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white"
+      className="font-semibold rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white"
     >
       削除
     </button>

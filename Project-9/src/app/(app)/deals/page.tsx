@@ -52,10 +52,12 @@ export default async function DealsPage({
     closed_lost: '失注',
   };
 
+  
+
   return (
-    <section className="rounded-lg bg-white shadow-sm">
-      <div className="flex items-center justify-between px-5 py-4 shadow-sm">
-        <h1 className="text-sm font-semibold">商談</h1>
+    <section className="rounded-lg bg-white">
+      <div className="flex items-center justify-between px-5 py-4 shadow-2xl">
+        <h1 className="text-sm font-semibold ">商談</h1>
         {/* Linkはサーバコンポーネントで使用できる。 */}
         <Link
           href="/deals/new"
@@ -65,8 +67,8 @@ export default async function DealsPage({
         </Link>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-sm">
+      <div className="overflow-x-auto shadow-lg">
+        <table className="min-w-full text-sm shadow-sm">
           <thead className="bg-gray-50 text-gray-800">
             <tr>
               <th className="px-5 py-3 text-left">タイトル</th>
@@ -142,9 +144,9 @@ export default async function DealsPage({
                   </td>
 
                   {/* ✅　❻見込み制約日 */}
-                  <td className="px-5 py-4">
+                  <td className="font-semibold px-5 py-4">
                     {c.expectedClosingDate
-                      ? c.expectedClosingDate.toLocaleDateString()
+                      ? c.expectedClosingDate.toLocaleDateString('ja-JP')
                       : '-'}
                   </td>
 

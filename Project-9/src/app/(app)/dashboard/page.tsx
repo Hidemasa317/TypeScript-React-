@@ -1,8 +1,8 @@
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
-import CmpRend from '@/components/layout/Dashboard/dashboardForm';
-import { Londrina_Sketch } from 'next/font/google';
+import CmpRend from '@/components/layout/CmpRend/dashboardForm';
+import CtcRend from '@/components/layout/CtcRend/dashboardForm';
 
 // ✅🤖URL毎のページ本体、描画を担う片割れ。会社ページ・連絡先ページ等を探しに行く。
 
@@ -126,9 +126,14 @@ export default async function DashboardPage() {
     memo: 'メモ',
   };
 
-  // 🚨CmpRend用
+  // 🏢CmpRend用
   const company = await prisma.company.findMany({
     select: { id: true, name: true },
+  });
+
+  // 📝CtcRend
+  const contact = await prisma.contact.findMany({
+    select: { id: true, firstName: true, lastName: true },
   });
 
   return (
@@ -136,16 +141,20 @@ export default async function DashboardPage() {
       <h1 className="text-2xl font-semibold">ダッシュボード</h1>
 
       {/* ✅🤖カード部 */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="flex grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* ✅配列の数分、UIを繰り返す。 */}
         {cmpcount.map((s) => (
           <div key={s.label} className="rounded-lg bg-white p-5 shadow-sm">
             {/* ✅label・会社を取得 */}
-            <div className="text-sm text-gray-600">{s.label}</div>
+            <div className="flex text-sm text-gray-600">
+              {s.label}/<CmpRend company={company} />
+              {/* <div className=" ml-auto">
+                <CmpRend company={company} />
+              </div> */}
+            </div>
             {/* ✅conpanyCountを取得 */}
             <div className="mt-2 text-3xl font-semibold">{s.value}</div>
             {/* 🚨　CmpRend */}
-            <CmpRend company={company} />
           </div>
         ))}
 
@@ -153,7 +162,9 @@ export default async function DashboardPage() {
         {ctcCount.map((s) => (
           <div key={s.label} className="rounded-lg bg-white p-5 shadow-sm">
             {/* ✅label・連絡先を取得 */}
-            <div className="text-sm text-gray-600">{s.label}</div>
+            <div className="text-sm text-gray-600">
+              {s.label}/<CtcRend contact={contact} />
+            </div>
             {/* ✅contactCountを取得 */}
             <div className="mt-2 text-3xl font-semibold">{s.value}</div>
           </div>
@@ -257,7 +268,7 @@ export default async function DashboardPage() {
           <div className="flex items-center justify-between  px-5 py-4 shadow-sm">
             <Link
               href="/deals/new"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
+              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white"
             >
               新規商談
             </Link>
@@ -274,7 +285,7 @@ export default async function DashboardPage() {
 
             <Link
               href="/activities/new"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
+              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white"
             >
               新規活動
             </Link>
@@ -320,13 +331,13 @@ export default async function DashboardPage() {
                   </div>
 
                   {/* ❷タイプ */}
-                  <div className="text-sm text-gray-700">
+                  <div className="text-sm font-semibold text-gray-700">
                     タイプ：{typeLabel[a.type] ?? a.type}
                   </div>
 
                   {/* ❸関連（会社） */}
                   {a.company && (
-                    <div className="text-sm">
+                    <div className="text-sm font-semibold">
                       関連：
                       <Link
                         href={`/companies/${a.companyId}`}
@@ -367,7 +378,12 @@ export default async function DashboardPage() {
                 <div className="flex-1">
                   {/* ❶タイトル */}
                   <div className="flex items-center justify-between">
-                    <div className="font-semibold">{a.title}</div>
+                    <Link
+                      href={`/activities/${a.id}`}
+                      className="font-semibold"
+                    >
+                      {a.title}
+                    </Link>
                     <div className="text-sm font-semibold text-gray-500">
                       予定日時:
                       {a.scheduledAt
@@ -377,13 +393,13 @@ export default async function DashboardPage() {
                   </div>
 
                   {/* ❷タイプ */}
-                  <div className="text-sm text-gray-700">
+                  <div className="text-sm font-semibold text-gray-700">
                     タイプ：{typeLabel[a.type] ?? a.type}
                   </div>
 
                   {/* ❸関連（会社） */}
                   {a.company && (
-                    <div className="text-sm">
+                    <div className="text-sm font-semibold">
                       関連：
                       <Link
                         href={`/companies/${a.companyId}`}

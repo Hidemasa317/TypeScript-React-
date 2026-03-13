@@ -47,7 +47,7 @@ export default async function ActivityDetailPage({ params }: Props) {
         <div className="flex gap-3">
           <Link
             href={`/activities/${activity.id}/edit`}
-            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white"
+            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white"
           >
             編集
           </Link>
@@ -57,7 +57,7 @@ export default async function ActivityDetailPage({ params }: Props) {
       </div>
 
       {/* N ここにステータスと、タイプを追加　🚨　*/}
-      <section className="rounded-lg border bg-white p-6">
+      <section className="rounded-lg shadow-lg bg-white p-6">
         <h2 className="mb-4 text-lg font-semibold">活動</h2>
 
         <div className="grid gap-6 md:grid-cols-2">
@@ -67,7 +67,7 @@ export default async function ActivityDetailPage({ params }: Props) {
 
             <Link
               href={`/companies/${activity.companyId?.toString()}`}
-              className="text-indigo-600 hover:underline"
+              className="font-semibold text-indigo-600 hover:underline"
             >
               {/* ✅🔵ここのcompanyはrelationフィールドのcompany。 // */}
               {/* activityはincludeを書いた変数、includeでテーブルをまたぎ、companyの（視点が変わる）、nameを参照できる。 */}
@@ -82,7 +82,7 @@ export default async function ActivityDetailPage({ params }: Props) {
             {activity.contact && (
               <Link
                 href={`/contacts/${activity.contactId?.toString()}`}
-                className="text-indigo-600 hover:underline"
+                className="font-semibold text-indigo-600 hover:underline"
               >
                 {/* ✅🔵ここのcompanyはrelationフィールドのcompany。 // */}
                 {/* contactはincludeを書いた変数、includeでテーブルをまたぎ、companyの（視点が変わる）、nameを参照できる。 */}
@@ -91,11 +91,11 @@ export default async function ActivityDetailPage({ params }: Props) {
             )}
           </div>
 
-          <div className="text-sm text-gray-600 mt-2">
+          <div className="font-semibold text-sm text-gray-600 mt-2">
             <p>
               予定日時:{' '}
               {activity.scheduledAt
-                ? activity.scheduledAt.toLocaleString()
+                ? activity.scheduledAt.toLocaleString('ja-JP')
                 : ''}
             </p>
           </div>

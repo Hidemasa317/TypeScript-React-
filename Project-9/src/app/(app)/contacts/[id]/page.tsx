@@ -64,7 +64,7 @@ export default async function ContactDetailPage({ params }: Props) {
 
             <Link
               href={`/companies/${contact.companyId.toString()}`}
-              className="text-indigo-600 hover:underline"
+              className="font-semibold text-indigo-600 hover:underline"
             >
               {/* ✅🔵ここのcompanyはrelationフィールドのcompany。 // */}
               {/* contactはincludeを書いた変数、includeでテーブルをまたぎ、companyの（視点が変わる）、nameを参照できる。 */}
