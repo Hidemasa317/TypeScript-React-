@@ -52,8 +52,6 @@ export default async function DealsPage({
     closed_lost: '失注',
   };
 
-  
-
   return (
     <section className="rounded-lg bg-white">
       <div className="flex items-center justify-between px-5 py-4 shadow-2xl">
@@ -124,7 +122,7 @@ export default async function DealsPage({
                         href={`/contacts/${c.contactId}`}
                         className="text-indigo-600 hover:underline"
                       >
-                        {c.contact.firstName} {c.contact.lastName}
+                        {c.contact.lastName} {c.contact.firstName}
                       </Link>
                     ) : (
                       '-'

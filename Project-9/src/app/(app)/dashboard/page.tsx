@@ -3,6 +3,9 @@ import Link from 'next/link';
 import { cookies } from 'next/headers';
 import CmpRend from '@/components/layout/CmpRend/dashboardForm';
 import CtcRend from '@/components/layout/CtcRend/dashboardForm';
+import DealRend from '@/components/layout/DealRend/dashboardForm';
+import WonDealRend from '@/components/layout/WonDealRend/dashboardForm';
+import { stringify } from 'querystring';
 
 // ✅🤖URL毎のページ本体、描画を担う片割れ。会社ページ・連絡先ページ等を探しに行く。
 
@@ -56,6 +59,9 @@ export default async function DashboardPage() {
   // 閲覧制限をかけるときに、引数に➡️{ where: { userId }を記述。
   const dlCount = [{ label: '商談', value: dealCount }];
 
+  // ✅🔵DBから活動数を取得。🔵
+  const ActCount = await prisma.activity.count();
+
   const closedWonCount = await prisma.deal.count({
     where: {
       status: 'closed_won',
@@ -75,6 +81,7 @@ export default async function DashboardPage() {
     // where: { userId },
     include: { company: true, contact: true }, //✅🚨
     orderBy: { createdAt: 'desc' },
+    take: 5,
   });
 
   // ✅status プルダウン設定部
@@ -101,6 +108,7 @@ export default async function DashboardPage() {
       deal: true,
     },
     orderBy: { scheduledAt: 'asc' },
+    take: 5,
   });
   // 🆕最近の活動　（分けて定数を定義）
 
@@ -134,6 +142,17 @@ export default async function DashboardPage() {
   // 📝CtcRend
   const contact = await prisma.contact.findMany({
     select: { id: true, firstName: true, lastName: true },
+  });
+
+  // 💰DealRend
+  const deal = await prisma.deal.findMany({
+    select: { id: true, title: true },
+  });
+
+  // 🟢WonDealRend
+  const WonDeal = await prisma.deal.findMany({
+    where: { status: 'closed_won' },
+    select: { id: true, title: true, status: true },
   });
 
   return (
@@ -173,7 +192,9 @@ export default async function DashboardPage() {
         {dlCount.map((s) => (
           <div key={s.label} className="rounded-lg bg-white p-5 shadow-sm">
             {/* ✅label・商談を取得 */}
-            <div className="text-sm text-gray-600">{s.label}</div>
+            <div className="text-sm text-gray-600">
+              {s.label}/<DealRend deal={deal} />
+            </div>
             {/* ✅dealCountを取得 */}
             <div className="mt-2 text-3xl font-semibold">{s.value}</div>
           </div>
@@ -182,7 +203,9 @@ export default async function DashboardPage() {
         {wonCount.map((s) => (
           <div key={s.label} className="rounded-lg bg-white p-5 shadow-sm">
             {/* ✅label・受注済み商談を取得 */}
-            <div className="text-sm text-gray-600">{s.label}</div>
+            <div className="text-sm text-gray-600">
+              {s.label}/<WonDealRend deal={WonDeal} />
+            </div>
             {/* ✅wonCountを取得 */}
             <div className="mt-2 text-3xl font-semibold">{s.value}</div>
           </div>
@@ -192,7 +215,18 @@ export default async function DashboardPage() {
       {/* ✅🤖　🆕　進行中の商談部 */}
       <section className="rounded-lg bg-white shadow-sm">
         <div className="flex items-center justify-between  px-5 py-4 shadow-sm">
-          <h1 className="text-sm font-semibold">進行中の商談</h1>
+          <h1 className="text-sm font-semibold">
+            進行中の商談（最新の5件）/
+            <Link href="/deals" className="font-semibold text-indigo-600">
+              See all
+            </Link>
+          </h1>
+
+          <input
+            type="text"
+            placeholder="検索バー"
+            className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
         </div>
 
         <div className="overflow-x-auto">
@@ -281,7 +315,21 @@ export default async function DashboardPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="rounded-lg bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between ">
-            <h2 className="text-sm font-semibold">今後の活動</h2>
+            <h2 className="text-sm font-semibold">
+              今後の活動
+              <hr />
+              {/* <div className="font-semibold">
+                Number of registered activities 『{ActCount}』
+              </div> */}
+              Maximum display number: 5 items
+              <Link
+                href="./activities"
+                className="text-indigo-600
+              "
+              >
+                ➡️ See all
+              </Link>
+            </h2>
 
             <Link
               href="/activities/new"
@@ -380,7 +428,7 @@ export default async function DashboardPage() {
                   <div className="flex items-center justify-between">
                     <Link
                       href={`/activities/${a.id}`}
-                      className="font-semibold"
+                      className="rounded-full text-indigo-600 font-semibold"
                     >
                       {a.title}
                     </Link>

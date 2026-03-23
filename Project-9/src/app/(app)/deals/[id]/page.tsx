@@ -32,6 +32,24 @@ export default async function DealDetailPage({ params }: Props) {
     notFound();
   }
 
+  // ✅status プルダウン設定部
+  const statusLabels: Record<string, string> = {
+    prospecting: '新規開拓',
+    qualification: 'ヒアリング',
+    needs_analysis: '課題分析',
+    proposal: '提案',
+    negotiation: '交渉',
+    closed_won: '受注',
+    closed_lost: '失注',
+  };
+
+  const dealStatusColor =
+    deal.status === 'closed_won'
+      ? 'bg-green-100 text-green-700'
+      : deal.status === 'closed_lost'
+        ? 'bg-red-100 text-red-700'
+        : 'bg-blue-100 text-blue-700';
+
   return (
     <div className="space-y-6">
       {/* タイトル */}
@@ -97,7 +115,11 @@ export default async function DealDetailPage({ params }: Props) {
           </div>
           <div>
             <p className="text-sm text-gray-500">ステータス</p>
-            <p> {deal.status ?? ''}</p>
+            <span
+              className={`rounded-full px-3 py-1  font-semibold ${dealStatusColor}`}
+            >
+              {statusLabels[deal.status] ?? deal.status}
+            </span>
           </div>
           <div>
             <p className="text-sm text-gray-500">見込み制約日</p>

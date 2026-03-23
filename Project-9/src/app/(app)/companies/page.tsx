@@ -6,9 +6,12 @@ import RowCmpActions from './row-actions';
 export default async function CompaniesPage({
   searchParams,
 }: {
+  // 🚨型の中の？は、オプショナルプロパティ。
   searchParams: Promise<{ page?: string | string[] }>;
   // 💎searchParams は Promise
 }) {
+  // 🚨searcParamsはあらかじめ用意されたprops名である。
+  // 🚨Approuteの仕組みで自動的にURL情報が（）に入っている。
   const params = await searchParams;
 
   // 🍪
@@ -19,7 +22,7 @@ export default async function CompaniesPage({
   }
   const userId = BigInt(uid);
 
-  // 📦📄Page
+  // 📦📄Page　三項演算子　？　：
   const pageParam = Array.isArray(params.page) ? params.page[0] : params.page;
 
   const page = Number(pageParam ?? 1);

@@ -125,7 +125,7 @@ export default function DealsForm({
             .map((c) => (
               <option key={c.id} value={c.id}>
                 {/* ✅　連絡先取得なので、　firstName と、lastName取得。 */}
-                {c.firstName} {c.lastName}
+                 {c.lastName} {c.firstName}
               </option>
             ))}
         </select>

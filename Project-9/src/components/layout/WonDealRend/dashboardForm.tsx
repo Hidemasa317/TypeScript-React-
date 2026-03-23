@@ -1,0 +1,76 @@
+'use client';
+import Link from 'next/link';
+import { useState } from 'react';
+
+type WonDeal = {
+  id: bigint;
+  title: string;
+  status: string;
+};
+
+export default function WonDealRend({ deal }: { deal: WonDeal[] }) {
+  const [open, setOpen] = useState(false);
+  const [page, setPage] = useState(1);
+
+  const pageSize = 3;
+
+  const start = (page - 1) * pageSize;
+
+  const end = start + pageSize;
+
+  const paginatedWonDeal = deal.slice(start, end);
+
+  const totalPages = Math.ceil(deal.length / pageSize);
+
+  return (
+    <div className="relative inline-block">
+      <button
+        onClick={() => {
+          setOpen(!open);
+        }}
+        className="text-indigo-600 font-semibold text-sm hover:underline"
+      >
+        受注済み商談
+      </button>
+
+      {open && (
+        <div className="absolute mt-2 w-30 rounded-md shadow-lg bg-white">
+          {paginatedWonDeal.map((c) => (
+            <Link
+              className="block px-4 py-2 w-30 text-sm font-semibold hover:bg-gray-100 shadow-sm"
+              key={String(c.id)}
+              href={`/deals/${c.id}`}
+            >
+              {c.title}
+            </Link>
+          ))}
+          <div className="flex item-center px-2 py-2">
+            <div className="flex item-center gap-2">
+              <button disabled={page === 1} onClick={() => setPage(page - 1)}>
+                &lt;
+              </button>
+
+              <span className="font-semibold">
+                {page} / {totalPages}
+              </span>
+
+              <button
+                disabled={page === totalPages}
+                onClick={() => setPage(page + 1)}
+              >
+                &gt;
+              </button>
+            </div>
+
+            <button
+              className=" text-xs font-semibold ml-auto"
+              onClick={() => setOpen(false)}
+            >
+              閉じる
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
