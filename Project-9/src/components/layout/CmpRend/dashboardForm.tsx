@@ -10,21 +10,20 @@ type Company = {
 
 export default function CmpRend({ company }: { company: Company[] }) {
   const [open, setOpen] = useState(false);
-  // const [opEffect, setOpEffect] = useState(false);
-
-  // useEffect(() => {
-  //   const handleClick = () => setOpen(false);
-
-  //   if (open) {
-  //     window.addEventListener('click', handleClick);
-  //   }
-
-  //   return () => {
-  //     window.removeEventListener('click', handleClick);
-  //   };
-  // }, [open]);
-
   const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    const handleClick = () => {
+      setOpen(false);
+    };
+
+    if (open) {
+      window.addEventListener('click', handleClick);
+    }
+    return () => {
+      window.removeEventListener('click', handleClick);
+    };
+  }, [open]);
 
   // 各ページの表示最大数。
   const pageSize = 3;
@@ -45,7 +44,8 @@ export default function CmpRend({ company }: { company: Company[] }) {
   return (
     <div className="relative inline-block">
       <button
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           setOpen(!open);
         }}
         className="text-indigo-600 font-semibold text-sm hover:underline"
