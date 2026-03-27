@@ -135,7 +135,7 @@ export default async function DealsPage({
                   {/* ✅　❺スタータス　プルダウン式の新要素　🔵 */}
                   <td className="px-5 py-4 font-semibold">
                     <span
-                      className={`rounded-full px-3 py-1 text-xs font-medium ${dealStatusColor}`}
+                      className={`rounded-full px-3 py-1 text-xs font-semibold ${dealStatusColor}`}
                     >
                       {statusLabels[c.status] ?? c.status}
                     </span>

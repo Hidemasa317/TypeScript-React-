@@ -122,8 +122,11 @@ export default async function ActivitiesPage({
                   </div>
 
                   {/* 🔵作成日時表示部🔵 */}
-                  <div className="text-sm font-semibold text-gray-500">
-                    {a.createdAt ? a.createdAt.toLocaleString('ja-JP') : '-'}
+                  <div className="text-md font-semibold text-gray-500">
+                    {a.createdAt
+                      ? a.createdAt.toLocaleDateString('ja-JP')
+                      : '-'}
+                    日に登録されました。📆
                   </div>
                 </div>
 
@@ -150,7 +153,7 @@ export default async function ActivitiesPage({
                       href={`/contacts/${a.contactId}`}
                       className="text-indigo-600 font-semibold hover:underline"
                     >
-                      {a.contact.firstName} {a.contact.lastName}
+                      {a.contact.lastName} {a.contact.firstName}
                     </Link>
                   </div>
                 )}
@@ -158,7 +161,8 @@ export default async function ActivitiesPage({
                 {/* 予定日時追加 */}
                 {a.scheduledAt && (
                   <div className="text-sm font-semibold text-gray-600 mt-2">
-                    予定日時: {a.scheduledAt.toLocaleString()}
+                    予定日時: {a.scheduledAt.toLocaleDateString('ja-Jp')}
+                    の活動予定です。🗓️
                   </div>
                 )}
                 {a.description && (

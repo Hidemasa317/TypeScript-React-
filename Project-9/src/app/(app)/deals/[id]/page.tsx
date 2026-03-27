@@ -59,7 +59,7 @@ export default async function DealDetailPage({ params }: Props) {
         <div className="flex gap-3">
           <Link
             href={`/deals/${deal.id}/edit`}
-            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white"
+            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white"
           >
             編集
           </Link>
@@ -69,7 +69,7 @@ export default async function DealDetailPage({ params }: Props) {
       </div>
 
       {/* 商談情報カード */}
-      <section className="rounded-lg border bg-white p-6">
+      <section className="rounded-lg shadow-sm bg-white p-6">
         <h2 className="mb-4 text-lg font-semibold">商談</h2>
 
         <div className="grid gap-6 md:grid-cols-2">
@@ -79,7 +79,7 @@ export default async function DealDetailPage({ params }: Props) {
 
             <Link
               href={`/companies/${deal.companyId.toString()}`}
-              className="text-indigo-600 hover:underline"
+              className="font-semibold text-indigo-600 hover:underline"
             >
               {/* ✅🔵ここのcompanyはrelationフィールドのcompany。 // */}
               {/* contactはincludeを書いた変数、includeでテーブルをまたぎ、companyの（視点が変わる）、nameを参照できる。 */}
@@ -94,11 +94,11 @@ export default async function DealDetailPage({ params }: Props) {
             {deal.contact && (
               <Link
                 href={`/contacts/${deal.contactId?.toString()}`}
-                className="text-indigo-600 hover:underline"
+                className="font-semibold text-indigo-600 hover:underline"
               >
                 {/* ✅🔵ここのcompanyはrelationフィールドのcompany。 // */}
                 {/* contactはincludeを書いた変数、includeでテーブルをまたぎ、companyの（視点が変わる）、nameを参照できる。 */}
-                {deal.contact.firstName} {deal.contact.lastName}
+                {deal.contact.lastName} {deal.contact.firstName}
               </Link>
             )}
           </div>
@@ -123,7 +123,7 @@ export default async function DealDetailPage({ params }: Props) {
           </div>
           <div>
             <p className="text-sm text-gray-500">見込み制約日</p>
-            <p>
+            <p className="font-semibold">
               {deal.expectedClosingDate
                 ? deal.expectedClosingDate.toISOString().split('T')[0]
                 : ''}

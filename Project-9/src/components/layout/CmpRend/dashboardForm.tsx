@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 
 type Company = {
@@ -9,6 +10,20 @@ type Company = {
 
 export default function CmpRend({ company }: { company: Company[] }) {
   const [open, setOpen] = useState(false);
+  // const [opEffect, setOpEffect] = useState(false);
+
+  // useEffect(() => {
+  //   const handleClick = () => setOpen(false);
+
+  //   if (open) {
+  //     window.addEventListener('click', handleClick);
+  //   }
+
+  //   return () => {
+  //     window.removeEventListener('click', handleClick);
+  //   };
+  // }, [open]);
+
   const [page, setPage] = useState(1);
 
   // 各ページの表示最大数。
@@ -39,7 +54,10 @@ export default function CmpRend({ company }: { company: Company[] }) {
       </button>
 
       {open && (
-        <div className="absolute mt-2 w-30 rounded-md shadow-lg bg-white">
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="absolute mt-2 w-30 rounded-md shadow-lg bg-white"
+        >
           {paginatedCmp.map((c) => (
             <Link
               className="block px-4 py-2 text-sm hover:bg-gray-100 shadow-sm"

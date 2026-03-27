@@ -37,14 +37,13 @@ export default async function ContactDetailPage({ params }: Props) {
       {/* タイトル */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">
-          {contact.firstName}
-          {contact.lastName}
+          {contact.lastName} {contact.firstName}
         </h1>
 
         <div className="flex gap-3">
           <Link
             href={`/contacts/${contact.id}/edit`}
-            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white"
+            className="font-semibold rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white"
           >
             編集
           </Link>
@@ -73,7 +72,7 @@ export default async function ContactDetailPage({ params }: Props) {
           </div>
 
           <div>
-            <p className="text-sm text-gray-500">役職</p>
+            <p className="font-semibold text-sm text-gray-500">役職</p>
             <p>{contact.position ?? '-'}</p>
           </div>
 

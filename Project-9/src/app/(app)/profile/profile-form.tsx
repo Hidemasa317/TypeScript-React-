@@ -55,7 +55,7 @@ export default function ProfileForm({ user }: { user: User }) {
     setConfirmPassword('');
   }
 
-  // 📦アカウント削除
+  // 📦アカウント削除 モーダル
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   return (

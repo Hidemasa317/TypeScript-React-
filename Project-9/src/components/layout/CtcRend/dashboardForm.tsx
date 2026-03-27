@@ -45,7 +45,7 @@ export default function CtcRend({ contact }: { contact: Contact[] }) {
         <div className="absolute mt-2 w-30 rounded-md shadow-lg bg-white">
           {paginatedCtc.map((c) => (
             <Link
-              className="block px-4 py-2 w-30 text-sm hover:bg-gray-100 shadow-sm"
+              className=" block px-4 py-2 w-30 text-sm hover:bg-gray-100 shadow-sm"
               key={String(c.id)}
               href={`/contacts/${c.id}`}
             >

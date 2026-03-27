@@ -5,7 +5,8 @@ import CmpRend from '@/components/layout/CmpRend/dashboardForm';
 import CtcRend from '@/components/layout/CtcRend/dashboardForm';
 import DealRend from '@/components/layout/DealRend/dashboardForm';
 import WonDealRend from '@/components/layout/WonDealRend/dashboardForm';
-import { stringify } from 'querystring';
+import SearchDealModal from '@/components/modal/SearchDealModal';
+import SearchDealButton from '@/components/SearchDealButton';
 
 // ✅🤖URL毎のページ本体、描画を担う片割れ。会社ページ・連絡先ページ等を探しに行く。
 
@@ -155,6 +156,33 @@ export default async function DashboardPage() {
     select: { id: true, title: true, status: true },
   });
 
+  // 検索商談モーダル 部
+  // const [showSearchCmp, setShowSearchCmp] = useState(false);
+
+  // 🆕商談検索部　DBパーツ
+
+  const searchDeals = await prisma.deal.findMany({
+    where: { userId },
+    select: {
+      id: true,
+      title: true,
+      status: true,
+      expectedClosingDate: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+
+  // 🆕bigintをstringへ変換。
+
+  const searchDealItems = searchDeals.map((c) => ({
+    id: c.id.toString(),
+    title: c.title,
+    status: c.status,
+    expectedClosingDate: c.expectedClosingDate?.toISOString() ?? '',
+  }));
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold">ダッシュボード</h1>
@@ -166,7 +194,7 @@ export default async function DashboardPage() {
           <div key={s.label} className="rounded-lg bg-white p-5 shadow-sm">
             {/* ✅label・会社を取得 */}
             <div className="flex text-sm text-gray-600">
-              {s.label}/<CmpRend company={company} />
+              {s.label}/ <CmpRend company={company} />
               {/* <div className=" ml-auto">
                 <CmpRend company={company} />
               </div> */}
@@ -181,7 +209,7 @@ export default async function DashboardPage() {
         {ctcCount.map((s) => (
           <div key={s.label} className="rounded-lg bg-white p-5 shadow-sm">
             {/* ✅label・連絡先を取得 */}
-            <div className="text-sm text-gray-600">
+            <div className="flex text-sm text-gray-600">
               {s.label}/<CtcRend contact={contact} />
             </div>
             {/* ✅contactCountを取得 */}
@@ -193,7 +221,7 @@ export default async function DashboardPage() {
           <div key={s.label} className="rounded-lg bg-white p-5 shadow-sm">
             {/* ✅label・商談を取得 */}
             <div className="text-sm text-gray-600">
-              {s.label}/<DealRend deal={deal} />
+              {s.label}/ <DealRend deal={deal} />
             </div>
             {/* ✅dealCountを取得 */}
             <div className="mt-2 text-3xl font-semibold">{s.value}</div>
@@ -204,7 +232,7 @@ export default async function DashboardPage() {
           <div key={s.label} className="rounded-lg bg-white p-5 shadow-sm">
             {/* ✅label・受注済み商談を取得 */}
             <div className="text-sm text-gray-600">
-              {s.label}/<WonDealRend deal={WonDeal} />
+              {s.label}/ <WonDealRend deal={WonDeal} />
             </div>
             {/* ✅wonCountを取得 */}
             <div className="mt-2 text-3xl font-semibold">{s.value}</div>
@@ -215,18 +243,14 @@ export default async function DashboardPage() {
       {/* ✅🤖　🆕　進行中の商談部 */}
       <section className="rounded-lg bg-white shadow-sm">
         <div className="flex items-center justify-between  px-5 py-4 shadow-sm">
-          <h1 className="text-sm font-semibold">
+          <h1 className="flex items-center gap-3  text-sm font-semibold">
             進行中の商談（最新の5件）/
             <Link href="/deals" className="font-semibold text-indigo-600">
+              {' '}
               See all
             </Link>
           </h1>
-
-          <input
-            type="text"
-            placeholder="検索バー"
-            className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
+          <SearchDealButton deals={searchDealItems} />
         </div>
 
         <div className="overflow-x-auto">
@@ -321,7 +345,7 @@ export default async function DashboardPage() {
               {/* <div className="font-semibold">
                 Number of registered activities 『{ActCount}』
               </div> */}
-              Maximum display number: 5 items
+              5件まで表示されます。
               <Link
                 href="./activities"
                 className="text-indigo-600

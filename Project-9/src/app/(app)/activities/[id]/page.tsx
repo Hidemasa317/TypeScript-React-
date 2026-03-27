@@ -86,7 +86,7 @@ export default async function ActivityDetailPage({ params }: Props) {
               >
                 {/* ✅🔵ここのcompanyはrelationフィールドのcompany。 // */}
                 {/* contactはincludeを書いた変数、includeでテーブルをまたぎ、companyの（視点が変わる）、nameを参照できる。 */}
-                {activity.contact.firstName} {activity.contact.lastName}
+                {activity.contact.lastName} {activity.contact.firstName}
               </Link>
             )}
           </div>
