@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useEffect } from 'react';
 
 type WonDeal = {
   id: bigint;
@@ -11,6 +12,20 @@ type WonDeal = {
 export default function WonDealRend({ deal }: { deal: WonDeal[] }) {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    const handleClick = () => {
+      setOpen(!open);
+    };
+
+    if (open) {
+      window.addEventListener('click', handleClick);
+    }
+
+    return () => {
+      window.removeEventListener('click', handleClick);
+    };
+  }, [open]);
 
   const pageSize = 3;
 
@@ -25,7 +40,8 @@ export default function WonDealRend({ deal }: { deal: WonDeal[] }) {
   return (
     <div className="relative inline-block">
       <button
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           setOpen(!open);
         }}
         className="text-indigo-600 font-semibold text-sm hover:underline"

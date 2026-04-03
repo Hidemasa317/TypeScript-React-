@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Contact = {
   id: bigint;
@@ -12,6 +12,20 @@ type Contact = {
 export default function CtcRend({ contact }: { contact: Contact[] }) {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    const handleClick = () => {
+      setOpen(!open);
+    };
+
+    if (open) {
+      window.addEventListener('click', handleClick);
+    }
+
+    return () => {
+      window.removeEventListener('click', handleClick);
+    };
+  }, [open]);
 
   // Pagination部
 
@@ -33,7 +47,8 @@ export default function CtcRend({ contact }: { contact: Contact[] }) {
   return (
     <div className="relative inline-block">
       <button
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           setOpen(!open);
         }}
         className="text-indigo-600 font-semibold text-sm hover:underline"

@@ -185,7 +185,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-semibold">ダッシュボード</h1>
+      <h1 className="text-2xl font-semibold">DashBoard</h1>
 
       {/* ✅🤖カード部 */}
       <div className="flex grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
