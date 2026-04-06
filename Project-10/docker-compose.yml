@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    container_name: email_delivery_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: mail_user
+      POSTGRES_PASSWORD: mail_password
+      POSTGRES_DB: email_delivery_db
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # MailHog: ローカル開発用のSMTPサーバー（実際には送信されない）
+  # http://localhost:8025 でメール確認可能
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: email_delivery_mailhog
+    restart: always
+    ports:
+      - '1025:1025'  # SMTP
+      - '8025:8025'  # Web UI
+
+volumes:
+  postgres_data:

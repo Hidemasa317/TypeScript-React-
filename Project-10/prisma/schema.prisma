@@ -1,0 +1,173 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ===== ユーザー（管理者・送信者） =====
+model User {
+  id           BigInt     @id @default(autoincrement())
+  name         String
+  email        String     @unique
+  passwordHash String
+  role         String     @default("user")
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  campaigns    Campaign[]
+  templates    EmailTemplate[]
+  contactLists ContactList[]
+}
+
+// ===== メールテンプレート =====
+model EmailTemplate {
+  id          BigInt     @id @default(autoincrement())
+  userId      BigInt
+  name        String                      // テンプレート名（管理用）
+  subject     String                      // 件名（{{firstName}}などの変数対応）
+  bodyHtml    String                      // HTMLメール本文
+  bodyText    String?                     // テキストメール本文（任意）
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  user        User       @relation(fields: [userId], references: [id])
+  campaigns   Campaign[]
+
+  @@index([userId])
+}
+
+// ===== 連絡先リスト（配信リスト） =====
+model ContactList {
+  id          BigInt        @id @default(autoincrement())
+  userId      BigInt
+  name        String
+  description String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  user        User          @relation(fields: [userId], references: [id])
+  memberships ContactListMembership[]
+  campaigns   Campaign[]
+
+  @@index([userId])
+}
+
+// ===== 連絡先（購読者） =====
+model Contact {
+  id          BigInt        @id @default(autoincrement())
+  email       String        @unique
+  firstName   String?
+  lastName    String?
+  company     String?
+  attributes  Json?         // 追加属性（カスタムフィールド）
+  status      ContactStatus @default(active)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  memberships ContactListMembership[]
+  sends       CampaignSend[]
+  unsubscribe UnsubscribeRecord?
+
+  @@index([email])
+  @@index([status])
+}
+
+// ===== 連絡先リストのメンバーシップ（中間テーブル） =====
+model ContactListMembership {
+  id            BigInt      @id @default(autoincrement())
+  contactId     BigInt
+  contactListId BigInt
+  joinedAt      DateTime    @default(now())
+
+  contact       Contact     @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  contactList   ContactList @relation(fields: [contactListId], references: [id], onDelete: Cascade)
+
+  @@unique([contactId, contactListId])
+  @@index([contactId])
+  @@index([contactListId])
+}
+
+// ===== キャンペーン（メール配信計画） =====
+model Campaign {
+  id              BigInt           @id @default(autoincrement())
+  userId          BigInt
+  templateId      BigInt
+  contactListId   BigInt
+  name            String
+  status          CampaignStatus   @default(draft)
+  scheduledAt     DateTime?        // スケジュール送信日時（nullなら即時）
+  sentAt          DateTime?        // 実際の送信完了日時
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  user            User             @relation(fields: [userId], references: [id])
+  template        EmailTemplate    @relation(fields: [templateId], references: [id])
+  contactList     ContactList      @relation(fields: [contactListId], references: [id])
+  sends           CampaignSend[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([scheduledAt])
+}
+
+// ===== 個別送信記録（トラッキング） =====
+model CampaignSend {
+  id           BigInt       @id @default(autoincrement())
+  campaignId   BigInt
+  contactId    BigInt
+  status       SendStatus   @default(pending)
+  sentAt       DateTime?
+  openedAt     DateTime?    // 開封日時
+  clickedAt    DateTime?    // クリック日時
+  bouncedAt    DateTime?    // バウンス日時
+  errorMessage String?      // 送信エラーメッセージ
+  trackingId   String       @unique @default(cuid()) // 開封/クリック追跡用
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  campaign     Campaign     @relation(fields: [campaignId], references: [id])
+  contact      Contact      @relation(fields: [contactId], references: [id])
+
+  @@unique([campaignId, contactId])
+  @@index([campaignId])
+  @@index([contactId])
+  @@index([status])
+  @@index([trackingId])
+}
+
+// ===== 配信停止記録 =====
+model UnsubscribeRecord {
+  id        BigInt    @id @default(autoincrement())
+  contactId BigInt    @unique
+  reason    String?
+  createdAt DateTime  @default(now())
+
+  contact   Contact   @relation(fields: [contactId], references: [id], onDelete: Cascade)
+}
+
+// ===== Enums =====
+enum ContactStatus {
+  active      // 有効
+  unsubscribed // 配信停止
+  bounced     // バウンス（無効アドレス）
+}
+
+enum CampaignStatus {
+  draft      // 下書き
+  scheduled  // スケジュール済み
+  sending    // 送信中
+  sent       // 送信完了
+  cancelled  // キャンセル
+}
+
+enum SendStatus {
+  pending    // 送信待ち
+  sent       // 送信済み
+  opened     // 開封済み
+  clicked    // クリック済み
+  bounced    // バウンス
+  failed     // 送信失敗
+}
