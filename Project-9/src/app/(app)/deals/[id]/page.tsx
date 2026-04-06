@@ -54,7 +54,11 @@ export default async function DealDetailPage({ params }: Props) {
     <div className="space-y-6">
       {/* タイトル */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">{deal.title}</h1>
+        <h1 className="text-2xl font-semibold">
+          {' '}
+          <p className="text-gray-700 text-sm">商談名:</p>
+          {deal.title}
+        </h1>
 
         <div className="flex gap-3">
           <Link

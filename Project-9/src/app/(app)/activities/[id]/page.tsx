@@ -42,7 +42,11 @@ export default async function ActivityDetailPage({ params }: Props) {
     <div className="space-y-6">
       {/* タイトル */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">{activity.title}</h1>
+        <h1 className="text-2xl font-semibold">
+          {' '}
+          <p className="text-gray-700 text-sm">活動名:</p>
+          {activity.title}
+        </h1>
 
         <div className="flex gap-3">
           <Link

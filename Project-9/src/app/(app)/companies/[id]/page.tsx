@@ -41,22 +41,23 @@ export default async function CompanyDetailPage({ params }: Props) {
     <div className="space-y-6">
       {/* タイトル */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">{company.name}</h1>
+        <h1 className="text-2xl font-semibold">
+          <p className="text-gray-700 text-sm">会社名:</p>
+          {company.name}
+        </h1>
 
         <div className="flex gap-3">
-
-         {user?.role === 'admin' && (
-          <Link
-            href={`/companies/${company.id}/edit`}
-            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white"
-          >
-            編集
-          </Link>
+          {user?.role === 'admin' && (
+            <Link
+              href={`/companies/${company.id}/edit`}
+              className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white"
+            >
+              編集
+            </Link>
           )}
-         {user?.role === 'admin' && (
-          <DeleteButton id={company.id.toString()} />
-         )}
-         
+          {user?.role === 'admin' && (
+            <DeleteButton id={company.id.toString()} />
+          )}
         </div>
       </div>
 

@@ -37,6 +37,8 @@ export default async function ContactDetailPage({ params }: Props) {
       {/* タイトル */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">
+          {' '}
+          <p className="text-gray-700 text-sm">連絡先名:</p>
           {contact.lastName} {contact.firstName}
         </h1>
 
